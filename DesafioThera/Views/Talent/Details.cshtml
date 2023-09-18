@@ -1,0 +1,75 @@
+﻿@model Application.ViewModels.TalentDetailsVM
+
+@{
+    ViewBag.Title = "Detalhes do Talento";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div>
+    <h4>Detalhes do Talento - @Model.FullName</h4>
+    <hr />
+    <dl class="dl-horizontal">
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Cpf)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Cpf)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Active)
+        </dt>
+
+        <dd>
+            @Model.StatusName(@Model.Active)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreatedAt)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreatedAt)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UpdatedAt)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UpdatedAt)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UpdatedBy)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UpdatedBy)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ResumeFileName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ResumeFileName)
+            @Html.ActionLink("Baixar Curriculo", "DownloadResume", "Talent", new { resumeUniqueName = Model.ResumeUniqueName, resumeFileName = Model.ResumeFileName }, null)
+        </dd>
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Editar", "Edit", new { Model.Id }) |
+    @Html.ActionLink("Voltar para a Lista", "Index")
+</p>

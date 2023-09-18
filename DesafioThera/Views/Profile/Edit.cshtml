@@ -1,0 +1,97 @@
+﻿@model Application.ViewModels.ProfileVM
+
+@{
+    ViewBag.Title = "Editar Perfil";
+}
+
+<div class="portlet light">
+    @Styles.Render("~/bundles/multiselect/css")
+    @using (Html.BeginForm("Edit", "Profile", FormMethod.Post, new { @class = "horizontal-form form", role = "form" }))
+    {
+        <h3 class="text-center">@ViewBag.Title</h3>
+        <hr />
+        <br />
+        @Html.HiddenFor(m => m.Active)
+        @Html.HiddenFor(m => m.Id)
+        <div class="form-body">
+            @Html.AntiForgeryToken()
+            <div class="portlet box red hidden" id="ValidationSummaryPortlet">
+                <div class="portlet-title uppercase" style="min-height: inherit !important;">
+                    @Html.DisplayName("Atenção!")
+                </div>
+                <div class="portlet-body">
+                    @Html.ValidationSummary(true, "", new { @class = "" })
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group form-md-line-input col-md-12">
+                            @Html.LabelFor(model => model.Name, new { @class = "control-label bold" })
+                            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <center>
+                        <div class="col-md-offset-3 col-md-6">
+                            <div class="form-group form-md-line-input">
+                                <label class="col-form-label bold" for="Variables">@Html.DisplayNameFor(model => model.PermissionGrouped)</label>
+                                <select multiple="multiple" class="multi-select-custom" id="multi-select-custom" name="SelectedPermissionIdList">
+                                    @foreach (var item in Model.PermissionGrouped)
+                                    {
+                                        <optgroup label="@item[0].ClaimType">
+                                            @foreach (var element in item.OrderBy(c => c.ClaimValue).ToList())
+                                            {
+                                                if (Model.SelectedPermissionIdList != null)
+                                                {
+                                                    if (Model.SelectedPermissionIdList.Contains(element.Id))
+                                                    {
+                                                        <option value="@element.Id" selected>@element.ClaimValue</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@element.Id">@element.ClaimValue</option>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <option value="@element.Id">@element.ClaimValue</option>
+                                                }
+                                            }
+                                        </optgroup>
+                                    }
+                                </select>
+                                @Html.ValidationMessageFor(model => model.SelectedPermissionIdList, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </center>
+                </div>
+                <div class="form-actions">
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <hr />
+                            <a class="btn default btn-circle" href="@Url.Action("Index")"><i class="fa fa-arrow-left"></i>  @Html.DisplayName("Voltar")</a>
+                            <button type="submit" class="btn btn-circle green btn-outline"> <i class="fa fa-edit"></i>  @Html.DisplayName("Salvar")</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/multiselectJs")
+    <script>
+        $(document).ready(function () {
+            $('.multi-select-custom').multiSelect({
+                selectableOptgroup: true,
+                keepOrder: true,
+                selectableHeader: "<div class='padding-tb-10'>Itens Selecionáveis</div>",
+                selectionHeader: "<div class='padding-tb-10'>Itens Selecionados</div>",
+            });
+        });
+    </script>
+}

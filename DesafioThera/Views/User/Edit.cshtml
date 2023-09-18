@@ -1,0 +1,125 @@
+﻿@model Application.ViewModels.UserVM
+@using Domain.Util.Internationalization
+
+@{
+    ViewBag.Title = string.Format(Language.editViewTitle, Language.User);
+    string currentLanguage = System.Threading.Thread.CurrentThread.CurrentUICulture.TextInfo.CultureName.ToLower(), displayName, tradeName; ;
+    if (currentLanguage.Contains("pt"))
+    {
+        displayName = "Name";
+        tradeName = "TradeNameInPortuguese";
+    }
+    else
+    {
+        displayName = "NameInEnglish";
+        tradeName = "TradeNameInEnglish";
+    }
+}
+<div class="portlet light">
+    @Styles.Render("~/MetronicMaterial/css")
+    @using (Html.BeginForm("Edit", "User", FormMethod.Post, new { @class = "horizontal-form form", role = "form" }))
+    {
+        <h3 class="text-center">@ViewBag.Title</h3>
+        <hr />
+        <br />
+        <div class="form-body">
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.Active)
+            @Html.HiddenFor(m => m.Id)
+            <div class="portlet box red hidden" id="ValidationSummaryPortlet">
+                <div class="portlet-title uppercase" style="min-height: inherit !important;">
+                    @Html.DisplayName(Language.Attention)
+                </div>
+                <div class="portlet-body">
+                    @Html.ValidationSummary(true, "", new { @class = "" })
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group form-md-line-input col-md-12">
+                            @Html.LabelFor(m => m.Name, new { @class = "control-label bold" })
+                            @Html.EditorFor(m => m.Name, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group form-md-line-input col-md-12">
+                            @Html.LabelFor(m => m.NickName, new { @class = "control-label bold" })
+                            @Html.EditorFor(m => m.NickName, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(m => m.NickName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group form-md-line-input col-md-12">
+                            @Html.LabelFor(m => m.Email, new { @class = "control-label bold" })
+                            @Html.EditorFor(m => m.Email, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group form-md-line-input col-md-12">
+                            @Html.LabelFor(m => m.Cpf, new { @class = "control-label bold" })
+                            @Html.EditorFor(m => m.Cpf, new { htmlAttributes = new { @class = "form-control", @id = "Cpf" } })
+                            @Html.ValidationMessageFor(m => m.Cpf, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group form-md-line-input col-md-12">
+                            @Html.LabelFor(model => model.CompanyId, new { @class = "control-label bold" })
+                            @Html.DropDownListFor(model => model.CompanyId, new SelectList(Model.CompanyList, "Id", tradeName), Language.SelectAItem, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.CompanyId, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group form-md-line-input col-md-12">
+                            @Html.LabelFor(model => model.IdProfile, new { @class = "control-label bold" })
+                            @Html.DropDownListFor(model => model.IdProfile, new SelectList(Model.ProfileList, "Id", displayName), Language.SelectAItem, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.IdProfile, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <hr />
+                            <a class="btn default btn-circle" href="@Url.Action("Index", "User")"><i class="fa fa-arrow-left"></i>  @Html.DisplayName(Language.Back)</a>
+                            <button type="submit" class="btn btn-circle green btn-outline">
+                                <i class="fa fa-save"></i> @Html.DisplayName(Language.Save)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/inputmask")
+    @Scripts.Render("~/MetronicMaterial/js")
+    <script type="text/javascript">
+        var elementsArray = [];
+        @foreach(KeyValuePair<string, ModelState> entry in @ViewData.ModelState)
+        {
+            if(entry.Value.Errors.Count > 0)
+            {
+                if (!String.IsNullOrEmpty(entry.Key))
+                {
+                    @:elementsArray.push("@entry.Key");
+                }
+                else
+                {
+                    @:$("#ValidationSummaryPortlet").removeClass("hidden");
+                }
+            }
+        }
+        AddHasErrorInParent(elementsArray);
+        $("#Cpf").inputmask({ "mask": "999.999.999-99", removeMaskOnSubmit: true, autoUnmask: true, placeholder: " ", clearMaskOnLostFocus: true });
+    </script>
+}
