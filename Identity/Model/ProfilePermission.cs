@@ -6,7 +6,7 @@ namespace Identity.Model
     {
         public CustomRole Profile { get; set; }
         public CustomClaim Permission { get; set; }
-        public int IdPermission { get; set; }
+        public int PermissionId { get; set; }
 
     }
 }

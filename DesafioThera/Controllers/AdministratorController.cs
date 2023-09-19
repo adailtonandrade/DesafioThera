@@ -36,7 +36,7 @@ namespace DesafioThera.Controllers
         // GET: Administrator
         public ActionResult Index()
         {
-            var administrators = _userAppService.Get(u => u.ProfileId == (int)ProfileEnum.Administrator);
+            var administrators = _userAppService.Get(u => u.ProfileId == (int)ProfileEnum.Administrator && u.Active == ((int)GenericStatusEnum.Active).ToString());
             return View(administrators);
         }
         //
@@ -69,7 +69,7 @@ namespace DesafioThera.Controllers
                     Cpf = Formatter.RemoveFormattingOfCnpjOrCpf(administrator.Cpf),
                     Name = administrator.Name.Trim(),
                     NickName = administrator.NickName.Trim(),
-                    IdProfile = administrator.ProfileId,
+                    ProfileId = administrator.ProfileId,
                     CreatedAt = DateTime.Now,
                     Active = activeStatus
                 };

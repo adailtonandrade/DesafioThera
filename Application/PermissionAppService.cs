@@ -8,6 +8,7 @@ using Application.ViewModels;
 using System.Linq.Expressions;
 using Domain.Entities;
 using AutoMapper;
+using AutoMapper.Extensions.ExpressionMapping;
 
 namespace Application
 {
@@ -36,8 +37,8 @@ namespace Application
 
         public IEnumerable<PermissionVM> Get(Expression<Func<PermissionVM, bool>> filter = null, Expression<Func<IQueryable<PermissionVM>, IOrderedQueryable<PermissionVM>>> orderBy = null, string includeProperties = "")
         {
-            var filterNew = filter != null ? _mapper.Map<Expression<Func<PermissionVM, bool>>, Expression<Func<Permission, bool>>>(filter) : null;
-            var orderByNew = orderBy != null ? _mapper.Map<Expression<Func<IQueryable<PermissionVM>, IOrderedQueryable<PermissionVM>>>
+            var filterNew = filter != null ? _mapper.MapExpression<Expression<Func<PermissionVM, bool>>, Expression<Func<Permission, bool>>>(filter) : null;
+            var orderByNew = orderBy != null ? _mapper.MapExpression<Expression<Func<IQueryable<PermissionVM>, IOrderedQueryable<PermissionVM>>>
                 , Expression<Func<IQueryable<Permission>, IOrderedQueryable<Permission>>>>(orderBy) : null;
             return _mapper.Map<IEnumerable<Permission>, IEnumerable<PermissionVM>>(_permissionService.Get(filterNew, orderByNew, includeProperties));
         }

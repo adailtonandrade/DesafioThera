@@ -23,6 +23,12 @@ namespace DesafioThera
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                       "~/Scripts/bootstrap.js"));
 
+            bundles.Add(new ScriptBundle("~/toastr/js").Include(
+                        "~/Scripts/toastr.js"));
+
+            bundles.Add(new ScriptBundle("~/toastr/css").Include(
+            "~/Content/toastr.css"));
+
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/site.css"));

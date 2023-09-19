@@ -1,0 +1,33 @@
+﻿@model System.Web.Mvc.HandleErrorInfo
+
+@{
+    ViewBag.Title = "Ocorreu um erro";
+}
+<link href="~/metronic/assets/pages/css/error.min.css" rel="stylesheet" />
+
+<div class="row">
+    <div class="col-md-12 page-404">
+        <div class="number font-green"> 400 </div>
+        <div class="details">
+            <h3>Requisição inválida.</h3>
+            <p>
+                Ocorreu um erro não mapeado durante a execução.
+                <br>
+                <a class="font-green" href="@Url.RouteUrl("Default", new { controller = "Home", action = "index"})"> Clique aqui </a> para retornar a página incial .
+            </p>
+            <p>
+                <b>Controller que originou o erro:</b> @Model.ControllerName
+            </p>
+            <p>
+                <b>Action:</b> @Model.ActionName
+            </p>
+            <p>
+                <b>Tipo da Exceção:</b> @Model.Exception.Message
+            </p>
+
+            <p>
+                <b>Tipo da Exceção:</b> @Model.Exception.GetType().FullName
+            </p>
+        </div>
+    </div>
+</div>

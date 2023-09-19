@@ -1,5 +1,6 @@
 using Application.ViewModels;
 using Domain.Validations;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -34,9 +35,9 @@ namespace Identity.ViewModels
         [Required]
         [Display(Name = "Perfil")]
         public int ProfileId { get; set; }
-
+        [JsonIgnore]
         public string Profile { get; set; }
-
+        [JsonIgnore]
         public List<ProfileVM> ProfileList { get; set; }
     }
 }

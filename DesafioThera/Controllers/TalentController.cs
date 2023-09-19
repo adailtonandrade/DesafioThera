@@ -26,7 +26,7 @@ namespace DesafioThera.Controllers
         // GET: Talent
         public ActionResult Index()
         {
-            var talents = _talentAppService.Get(t=>t.Active == ((int)GenericStatusEnum.Active).ToString());
+            var talents = _talentAppService.Get(t => t.Active == ((int)GenericStatusEnum.Active).ToString());
             return View(talents);
         }
 
@@ -53,6 +53,7 @@ namespace DesafioThera.Controllers
 
         public ActionResult Create(TalentVM talentVM)
         {
+            talentVM.UpdatedBy = Int32.Parse(User.Identity.GetUserId());
             if (ModelState.IsValid)
             {
                 _errors = _talentAppService.Insert(talentVM);

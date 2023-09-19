@@ -10,6 +10,7 @@ using Domain.Interfaces.Data;
 using Application.Interfaces;
 using System.Web;
 using System.IO;
+using AutoMapper.Extensions.ExpressionMapping;
 
 namespace Application
 {
@@ -91,8 +92,8 @@ namespace Application
 
         public IEnumerable<TalentVM> Get(Expression<Func<TalentVM, bool>> filter = null, Expression<Func<IQueryable<TalentVM>, IOrderedQueryable<TalentVM>>> orderBy = null, string includeProperties = "")
         {
-            var filterNew = filter != null ? _mapper.Map<Expression<Func<TalentVM, bool>>, Expression<Func<Talent, bool>>>(filter) : null;
-            var orderByNew = orderBy != null ? _mapper.Map<Expression<Func<IQueryable<TalentVM>, IOrderedQueryable<TalentVM>>>
+            var filterNew = filter != null ? _mapper.MapExpression<Expression<Func<TalentVM, bool>>, Expression<Func<Talent, bool>>>(filter) : null;
+            var orderByNew = orderBy != null ? _mapper.MapExpression<Expression<Func<IQueryable<TalentVM>, IOrderedQueryable<TalentVM>>>
                 , Expression<Func<IQueryable<Talent>, IOrderedQueryable<Talent>>>>(orderBy) : null;
             return _mapper.Map<IEnumerable<Talent>, IEnumerable<TalentVM>>(_talentService.Get(filterNew, orderByNew, includeProperties));
         }
@@ -109,7 +110,7 @@ namespace Application
 
         public TalentDetailsVM GetDetailsById(int id)
         {
-            var talent = _talentService.GetById(id);
+            var talent = _talentService.Get(t => t.Id == id, null, "UserWhoUpdated").FirstOrDefault();
             TalentDetailsVM talentDetails = _mapper.Map<Talent, TalentDetailsVM>(talent);
             talentDetails.UpdatedBy = talent.UserWhoUpdated.Name;
             return talentDetails;
@@ -130,6 +131,7 @@ namespace Application
                     talent.ResumeFileName = obj.Resume.FileName;
                     talent.ResumeUniqueName = uniqueFileName;
                     talent.CreatedAt = DateTime.Now;
+                    talent.UpdatedAt = DateTime.Now;
                     BeginTransaction();
                     _talentService.Insert(talent);
                     SaveChanges();

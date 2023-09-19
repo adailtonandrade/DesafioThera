@@ -5,6 +5,7 @@ using Identity.Configuration;
 using Identity.ViewModels;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
+using RedWillow.MvcToastrFlash;
 
 namespace DesafioThera.Controllers
 {
@@ -46,7 +47,8 @@ namespace DesafioThera.Controllers
                 {
                     await _signInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                 }
-                return RedirectToAction("Details", "User");
+                this.Flash(Toastr.SUCCESS, "Senha alterada com sucesso");
+                return RedirectToAction("Index");
             }
             AddErrors(result);
             return View(model);
@@ -63,7 +65,6 @@ namespace DesafioThera.Controllers
             base.Dispose(disposing);
         }
 
-        #region Identity Methods not used
         //
         // GET: /Manage/Index
         public async Task<ActionResult> Index(ManageMessageId? message)
@@ -88,37 +89,37 @@ namespace DesafioThera.Controllers
             };
             return View(model);
         }
-
+        #region Identity Methods not used
         //
         // POST: /Manage/RemoveLogin
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> RemoveLogin(string loginProvider, string providerKey)
-        {
-            ManageMessageId? message;
-            var result = await _userManager.RemoveLoginAsync(User.Identity.GetUserId<int>(), new UserLoginInfo(loginProvider, providerKey));
-            if (result.Succeeded)
-            {
-                var user = await _userManager.FindByIdAsync(User.Identity.GetUserId<int>());
-                if (user != null)
-                {
-                    await _signInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-                }
-                message = ManageMessageId.RemoveLoginSuccess;
-            }
-            else
-            {
-                message = ManageMessageId.Error;
-            }
-            return RedirectToAction("ManageLogins", new { Message = message });
-        }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<ActionResult> RemoveLogin(string loginProvider, string providerKey)
+        //{
+        //    ManageMessageId? message;
+        //    var result = await _userManager.RemoveLoginAsync(User.Identity.GetUserId<int>(), new UserLoginInfo(loginProvider, providerKey));
+        //    if (result.Succeeded)
+        //    {
+        //        var user = await _userManager.FindByIdAsync(User.Identity.GetUserId<int>());
+        //        if (user != null)
+        //        {
+        //            await _signInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+        //        }
+        //        message = ManageMessageId.RemoveLoginSuccess;
+        //    }
+        //    else
+        //    {
+        //        message = ManageMessageId.Error;
+        //    }
+        //    return RedirectToAction("ManageLogins", new { Message = message });
+        //}
 
         //
         // GET: /Manage/AddPhoneNumber
-        public ActionResult AddPhoneNumber()
-        {
-            return View();
-        }
+        //public ActionResult AddPhoneNumber()
+        //{
+        //    return View();
+        //}
 
         //
         // POST: /Manage/AddPhoneNumber
@@ -146,33 +147,33 @@ namespace DesafioThera.Controllers
 
         //
         // POST: /Manage/EnableTwoFactorAuthentication
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EnableTwoFactorAuthentication()
-        {
-            await _userManager.SetTwoFactorEnabledAsync(User.Identity.GetUserId<int>(), true);
-            var user = await _userManager.FindByIdAsync(User.Identity.GetUserId<int>());
-            if (user != null)
-            {
-                await _signInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-            }
-            return RedirectToAction("Index", "Manage");
-        }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<ActionResult> EnableTwoFactorAuthentication()
+        //{
+        //    await _userManager.SetTwoFactorEnabledAsync(User.Identity.GetUserId<int>(), true);
+        //    var user = await _userManager.FindByIdAsync(User.Identity.GetUserId<int>());
+        //    if (user != null)
+        //    {
+        //        await _signInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+        //    }
+        //    return RedirectToAction("Index", "Manage");
+        //}
 
         //
         // POST: /Manage/DisableTwoFactorAuthentication
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DisableTwoFactorAuthentication()
-        {
-            await _userManager.SetTwoFactorEnabledAsync(User.Identity.GetUserId<int>(), false);
-            var user = await _userManager.FindByIdAsync(User.Identity.GetUserId<int>());
-            if (user != null)
-            {
-                await _signInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-            }
-            return RedirectToAction("Index", "Manage");
-        }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<ActionResult> DisableTwoFactorAuthentication()
+        //{
+        //    await _userManager.SetTwoFactorEnabledAsync(User.Identity.GetUserId<int>(), false);
+        //    var user = await _userManager.FindByIdAsync(User.Identity.GetUserId<int>());
+        //    if (user != null)
+        //    {
+        //        await _signInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+        //    }
+        //    return RedirectToAction("Index", "Manage");
+        //}
 
         //
         // GET: /Manage/VerifyPhoneNumber
@@ -210,54 +211,54 @@ namespace DesafioThera.Controllers
 
         //
         // POST: /Manage/RemovePhoneNumber
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> RemovePhoneNumber()
-        {
-            var result = await _userManager.SetPhoneNumberAsync(User.Identity.GetUserId<int>(), null);
-            if (!result.Succeeded)
-            {
-                return RedirectToAction("Index", new { Message = ManageMessageId.Error });
-            }
-            var user = await _userManager.FindByIdAsync(User.Identity.GetUserId<int>());
-            if (user != null)
-            {
-                await _signInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-            }
-            return RedirectToAction("Index", new { Message = ManageMessageId.RemovePhoneSuccess });
-        }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<ActionResult> RemovePhoneNumber()
+        //{
+        //    var result = await _userManager.SetPhoneNumberAsync(User.Identity.GetUserId<int>(), null);
+        //    if (!result.Succeeded)
+        //    {
+        //        return RedirectToAction("Index", new { Message = ManageMessageId.Error });
+        //    }
+        //    var user = await _userManager.FindByIdAsync(User.Identity.GetUserId<int>());
+        //    if (user != null)
+        //    {
+        //        await _signInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+        //    }
+        //    return RedirectToAction("Index", new { Message = ManageMessageId.RemovePhoneSuccess });
+        //}
 
         //
         // GET: /Manage/SetPassword
-        public ActionResult SetPassword()
-        {
-            return View();
-        }
+        //public ActionResult SetPassword()
+        //{
+        //    return View();
+        //}
 
         //
         // POST: /Manage/SetPassword
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> SetPassword(SetPasswordVM model)
-        {
-            if (ModelState.IsValid)
-            {
-                var result = await _userManager.AddPasswordAsync(User.Identity.GetUserId<int>(), model.NewPassword);
-                if (result.Succeeded)
-                {
-                    var user = await _userManager.FindByIdAsync(User.Identity.GetUserId<int>());
-                    if (user != null)
-                    {
-                        await _signInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-                    }
-                    return RedirectToAction("Index", new { Message = ManageMessageId.SetPasswordSuccess });
-                }
-                AddErrors(result);
-            }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<ActionResult> SetPassword(SetPasswordVM model)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        var result = await _userManager.AddPasswordAsync(User.Identity.GetUserId<int>(), model.NewPassword);
+        //        if (result.Succeeded)
+        //        {
+        //            var user = await _userManager.FindByIdAsync(User.Identity.GetUserId<int>());
+        //            if (user != null)
+        //            {
+        //                await _signInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+        //            }
+        //            return RedirectToAction("Index", new { Message = ManageMessageId.SetPasswordSuccess });
+        //        }
+        //        AddErrors(result);
+        //    }
 
-            // If we got this far, something failed, redisplay form
-            return View(model);
-        }
+        //    // If we got this far, something failed, redisplay form
+        //    return View(model);
+        //}
 
         //
         // GET: /Manage/ManageLogins
@@ -284,26 +285,26 @@ namespace DesafioThera.Controllers
 
         //
         // POST: /Manage/LinkLogin
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult LinkLogin(string provider)
-        {
-            // Request a redirect to the external login provider to link a login for the current user
-            return new AccountController.ChallengeResult(provider, Url.Action("LinkLoginCallback", "Manage"), User.Identity.GetUserId());
-        }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult LinkLogin(string provider)
+        //{
+        //    // Request a redirect to the external login provider to link a login for the current user
+        //    return new AccountController.ChallengeResult(provider, Url.Action("LinkLoginCallback", "Manage"), User.Identity.GetUserId());
+        //}
 
-        //
-        // GET: /Manage/LinkLoginCallback
-        public async Task<ActionResult> LinkLoginCallback()
-        {
-            var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync(XsrfKey, User.Identity.GetUserId());
-            if (loginInfo == null)
-            {
-                return RedirectToAction("ManageLogins", new { Message = ManageMessageId.Error });
-            }
-            var result = await _userManager.AddLoginAsync(User.Identity.GetUserId<int>(), loginInfo.Login);
-            return result.Succeeded ? RedirectToAction("ManageLogins") : RedirectToAction("ManageLogins", new { Message = ManageMessageId.Error });
-        }
+        ////
+        //// GET: /Manage/LinkLoginCallback
+        //public async Task<ActionResult> LinkLoginCallback()
+        //{
+        //    var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync(XsrfKey, User.Identity.GetUserId());
+        //    if (loginInfo == null)
+        //    {
+        //        return RedirectToAction("ManageLogins", new { Message = ManageMessageId.Error });
+        //    }
+        //    var result = await _userManager.AddLoginAsync(User.Identity.GetUserId<int>(), loginInfo.Login);
+        //    return result.Succeeded ? RedirectToAction("ManageLogins") : RedirectToAction("ManageLogins", new { Message = ManageMessageId.Error });
+        //}
         #endregion
 
         #region Helpers

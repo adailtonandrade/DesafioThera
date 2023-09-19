@@ -5,7 +5,7 @@
     using Domain.Util;
     using System.Data.Entity.Migrations;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<Context.ModelContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<Data.Context.ModelContext>
     {
         public Configuration()
         {
@@ -62,34 +62,34 @@
             #region ProfilePermission
             context.ProfilePermission.AddOrUpdate(
             #region Administratator
-                new ProfilePermission() { IdProfile = (int)ProfileEnum.Administrator, IdPermission = 1 },
-                new ProfilePermission() { IdProfile = (int)ProfileEnum.Administrator, IdPermission = 2 },
-                new ProfilePermission() { IdProfile = (int)ProfileEnum.Administrator, IdPermission = 5 },
-                new ProfilePermission() { IdProfile = (int)ProfileEnum.Administrator, IdPermission = 6 },
-                new ProfilePermission() { IdProfile = (int)ProfileEnum.Administrator, IdPermission = 7 },
-                new ProfilePermission() { IdProfile = (int)ProfileEnum.Administrator, IdPermission = 8 },
-                new ProfilePermission() { IdProfile = (int)ProfileEnum.Administrator, IdPermission = 9 },
-                new ProfilePermission() { IdProfile = (int)ProfileEnum.Administrator, IdPermission = 10 },
-                new ProfilePermission() { IdProfile = (int)ProfileEnum.Administrator, IdPermission = 11 },
-                new ProfilePermission() { IdProfile = (int)ProfileEnum.Administrator, IdPermission = 12 },
-                new ProfilePermission() { IdProfile = (int)ProfileEnum.Administrator, IdPermission = 13 },
-                new ProfilePermission() { IdProfile = (int)ProfileEnum.Administrator, IdPermission = 14 },
-                new ProfilePermission() { IdProfile = (int)ProfileEnum.Administrator, IdPermission = 15 },
-                new ProfilePermission() { IdProfile = (int)ProfileEnum.Administrator, IdPermission = 16 },
+                new ProfilePermission() { ProfileId = (int)ProfileEnum.Administrator, PermissionId = 1 },
+                new ProfilePermission() { ProfileId = (int)ProfileEnum.Administrator, PermissionId = 2 },
+                new ProfilePermission() { ProfileId = (int)ProfileEnum.Administrator, PermissionId = 5 },
+                new ProfilePermission() { ProfileId = (int)ProfileEnum.Administrator, PermissionId = 6 },
+                new ProfilePermission() { ProfileId = (int)ProfileEnum.Administrator, PermissionId = 7 },
+                new ProfilePermission() { ProfileId = (int)ProfileEnum.Administrator, PermissionId = 8 },
+                new ProfilePermission() { ProfileId = (int)ProfileEnum.Administrator, PermissionId = 9 },
+                new ProfilePermission() { ProfileId = (int)ProfileEnum.Administrator, PermissionId = 10 },
+                new ProfilePermission() { ProfileId = (int)ProfileEnum.Administrator, PermissionId = 11 },
+                new ProfilePermission() { ProfileId = (int)ProfileEnum.Administrator, PermissionId = 12 },
+                new ProfilePermission() { ProfileId = (int)ProfileEnum.Administrator, PermissionId = 13 },
+                new ProfilePermission() { ProfileId = (int)ProfileEnum.Administrator, PermissionId = 14 },
+                new ProfilePermission() { ProfileId = (int)ProfileEnum.Administrator, PermissionId = 15 },
+                new ProfilePermission() { ProfileId = (int)ProfileEnum.Administrator, PermissionId = 16 },
             #endregion
             #region Secretary
-                new ProfilePermission() { IdProfile = (int)ProfileEnum.Secretary, IdPermission = 5 },
-                new ProfilePermission() { IdProfile = (int)ProfileEnum.Secretary, IdPermission = 6 },
-                new ProfilePermission() { IdProfile = (int)ProfileEnum.Secretary, IdPermission = 7 },
-                new ProfilePermission() { IdProfile = (int)ProfileEnum.Secretary, IdPermission = 9 },
-                new ProfilePermission() { IdProfile = (int)ProfileEnum.Secretary, IdPermission = 10 },
-                new ProfilePermission() { IdProfile = (int)ProfileEnum.Secretary, IdPermission = 11 },
-                new ProfilePermission() { IdProfile = (int)ProfileEnum.Secretary, IdPermission = 13 },
-                new ProfilePermission() { IdProfile = (int)ProfileEnum.Secretary, IdPermission = 14 },
-                new ProfilePermission() { IdProfile = (int)ProfileEnum.Secretary, IdPermission = 15 },
+                new ProfilePermission() { ProfileId = (int)ProfileEnum.Secretary, PermissionId = 5 },
+                new ProfilePermission() { ProfileId = (int)ProfileEnum.Secretary, PermissionId = 6 },
+                new ProfilePermission() { ProfileId = (int)ProfileEnum.Secretary, PermissionId = 7 },
+                new ProfilePermission() { ProfileId = (int)ProfileEnum.Secretary, PermissionId = 9 },
+                new ProfilePermission() { ProfileId = (int)ProfileEnum.Secretary, PermissionId = 10 },
+                new ProfilePermission() { ProfileId = (int)ProfileEnum.Secretary, PermissionId = 11 },
+                new ProfilePermission() { ProfileId = (int)ProfileEnum.Secretary, PermissionId = 13 },
+                new ProfilePermission() { ProfileId = (int)ProfileEnum.Secretary, PermissionId = 14 },
+                new ProfilePermission() { ProfileId = (int)ProfileEnum.Secretary, PermissionId = 15 },
             #endregion
             #region Reader
-                new ProfilePermission() { IdProfile = (int)ProfileEnum.Reader, IdPermission = 14 }
+                new ProfilePermission() { ProfileId = (int)ProfileEnum.Reader, PermissionId = 14 }
                 #endregion
             );
             #endregion

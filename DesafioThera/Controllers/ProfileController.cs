@@ -73,9 +73,9 @@ namespace DesafioThera.Controllers
                     throw new HttpException((int)HttpStatusCode.BadRequest, String.Format("Identificador(Id) inválido. Não foi encontrado nenhum perfil com o Id {0} na base de dados", id));
 
                 GroupPermissions(profileViewEdit);
-                GetIdPermissions(profileViewEdit);
+                GetPermissionIds(profileViewEdit);
 
-                profileViewEdit.SelectedPermissionIdList = profileViewEdit.ProfilePermissions.Select(a => a.IdPermission).ToList();
+                profileViewEdit.SelectedPermissionIdList = profileViewEdit.ProfilePermissions.Select(a => a.PermissionId).ToList();
 
                 return View(profileViewEdit);
             }
@@ -132,12 +132,12 @@ namespace DesafioThera.Controllers
             return RedirectToAction("Delete", new { profileId });
         }
 
-        private void GetIdPermissions(ProfileVM profile)
+        private void GetPermissionIds(ProfileVM profile)
         {
             if (profile?.ProfilePermissions?.Count > 0)
             {
-                var IdPermissions = profile.ProfilePermissions.Select(p => p.IdPermission).ToList();
-                profile.SelectedPermissionIdList = IdPermissions;
+                var permissionIds = profile.ProfilePermissions.Select(p => p.PermissionId).ToList();
+                profile.SelectedPermissionIdList = permissionIds;
             }
         }
 

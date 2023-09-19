@@ -12,7 +12,7 @@ namespace Service
     {
         private readonly IUserRepository _userRepository;
 
-        private List<string> _errors;
+        private List<string> _errors = new List<string>();
 
         public UserService(IUserRepository userRepository) : base(userRepository)
         {

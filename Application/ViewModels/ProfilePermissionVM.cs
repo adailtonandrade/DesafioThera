@@ -2,9 +2,9 @@
 {
     public class ProfilePermissionVM
     {
-        public int IdProfile { get; set; }
+        public int ProfileId { get; set; }
 
-        public int IdPermission { get; set; }
+        public int PermissionId { get; set; }
 
         public int? IdUser { get; set; }
         

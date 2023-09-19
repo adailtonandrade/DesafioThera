@@ -1,0 +1,20 @@
+﻿@{
+    ViewBag.Title = "Acesso Negado";
+}
+
+@*<link href="~/metronic/assets/pages/css/error.min.css" rel="stylesheet" />*@
+
+<div class="row">
+    <br />
+    <div class="col-md-12 page-404">
+        <div class="number font-green"> 403 </div>
+        <div class="details">
+            <h3>@ViewBag.Title</h3>
+            <p>
+                Você não tem permissão para acessar este conteúdo ou recurso
+                <br>
+                <a class="font-green" href="@Url.RouteUrl("Default", new { controller = "Home", action = "index"})"> @Html.DisplayName("Clique aqui") </a> para voltar a página inicial
+            </p>
+        </div>
+    </div>
+</div>

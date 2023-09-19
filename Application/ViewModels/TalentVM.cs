@@ -38,7 +38,7 @@ namespace Application.ViewModels
 
         [Display(Name = "Atualizado Por")]
         public int UpdatedBy { get; set; }
-
+        [Display(Name = "Currículo")]
         public HttpPostedFileBase Resume { get; set; }
         public string ResumeUniqueName { get; set; }
         [Display(Name = "Curriculo Atual")]

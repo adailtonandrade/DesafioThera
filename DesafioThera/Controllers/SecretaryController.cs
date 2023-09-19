@@ -36,7 +36,7 @@ namespace DesafioThera.Controllers
         [ClaimsAuthorize(claimType: TypePermissionEnum.Secretaries, claimValue: ValuePermissionEnum.Consult)]
         public ActionResult Index()
         {
-            var secretaries = _userAppService.Get(u => u.ProfileId == (int)ProfileEnum.Secretary);
+            var secretaries = _userAppService.Get(u => u.ProfileId == (int)ProfileEnum.Secretary && u.Active == ((int)GenericStatusEnum.Active).ToString());
             return View(secretaries);
         }
 
@@ -68,7 +68,7 @@ namespace DesafioThera.Controllers
                     Cpf = Formatter.RemoveFormattingOfCnpjOrCpf(secretary.Cpf),
                     Name = secretary.Name.Trim(),
                     NickName = secretary.NickName.Trim(),
-                    IdProfile = secretary.ProfileId,
+                    ProfileId = secretary.ProfileId,
                     CreatedAt = DateTime.Now,
                     Active = activeStatus
                 };

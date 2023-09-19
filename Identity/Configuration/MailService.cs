@@ -15,23 +15,23 @@ namespace Identity.Configuration
         }
 
         // Implementação do SendGrid
-        private Task ConfigSendGridasync(IdentityMessage message)
+        private async Task<Response> ConfigSendGridasync(IdentityMessage message)
         {
-            var myMessage = new SendGridMessage();
-            myMessage.AddTo(message.Destination);
-            myMessage.SetFrom(new EmailAddress("admin@portal.com.br", "Admin do Portal"));
-            myMessage.Subject = message.Subject;
-            myMessage.PlainTextContent = message.Body;
-            myMessage.HtmlContent = message.Body;
+            var apiKey = ConfigurationManager.AppSettings["mailApi"];
+            var from = new EmailAddress("aafilhojob@gmail.com", "Sistema de Gestão de Talentos");
+            var subject = message.Subject;
+            var to = new EmailAddress(message.Destination);
+            var htmlContent = message.Body;
+            var msg = MailHelper.CreateSingleEmail(from, to, subject, null, htmlContent);
 
-            var response = SendAsync(myMessage).Result;
+            var response = await SendAsync(msg);
             if (!response.IsSuccessStatusCode)
             {
-                return Task.FromResult(response);
+                return response;
             }
             else
             {
-                return Task.FromResult(0);
+                return null;
             }
         }
         private async Task<Response> SendAsync(SendGridMessage message)

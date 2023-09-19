@@ -9,6 +9,7 @@ using System.Linq.Expressions;
 using Domain.Entities;
 using Domain.Enum;
 using AutoMapper;
+using AutoMapper.Extensions.ExpressionMapping;
 
 namespace Application
 {
@@ -38,8 +39,8 @@ namespace Application
 
         public IEnumerable<UserVM> Get(Expression<Func<UserVM, bool>> filter = null, Expression<Func<IQueryable<UserVM>, IOrderedQueryable<UserVM>>> orderBy = null, string includeProperties = "")
         {
-            var filterNew = filter != null ? _mapper.Map<Expression<Func<UserVM, bool>>, Expression<Func<User, bool>>>(filter) : null;
-            var orderByNew = orderBy != null ? _mapper.Map<Expression<Func<IQueryable<UserVM>, IOrderedQueryable<UserVM>>>
+            var filterNew = filter != null ? _mapper.MapExpression<Expression<Func<UserVM, bool>>, Expression<Func<User, bool>>>(filter) : null;
+            var orderByNew = orderBy != null ? _mapper.MapExpression<Expression<Func<IQueryable<UserVM>, IOrderedQueryable<UserVM>>>
                 , Expression<Func<IQueryable<User>, IOrderedQueryable<User>>>>(orderBy) : null;
             return _mapper.Map<IEnumerable<User>, IEnumerable<UserVM>>(_userService.Get(filterNew, orderByNew, includeProperties));
         }
@@ -65,7 +66,7 @@ namespace Application
                     userToBeChanged.Name = user.Name;
                     userToBeChanged.Username = user.Email;
                     userToBeChanged.NickName = user.NickName;
-                    _userService.Update(user);
+                    _userService.Update(userToBeChanged);
                     SaveChanges();
                     Commit();
                 }

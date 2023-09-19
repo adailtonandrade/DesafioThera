@@ -1,9 +1,8 @@
 ﻿namespace Data.Migrations
 {
-    using System;
     using System.Data.Entity.Migrations;
-    
-    public partial class inicial : DbMigration
+
+    public partial class initial : DbMigration
     {
         public override void Up()
         {
@@ -22,15 +21,15 @@
                 "dbo.ProfilePermission",
                 c => new
                     {
-                        IdProfile = c.Int(nullable: false),
-                        IdPermission = c.Int(nullable: false),
+                        ProfileId = c.Int(nullable: false),
+                        PermissionId = c.Int(nullable: false),
                         IdUser = c.Int(),
                     })
-                .PrimaryKey(t => new { t.IdProfile, t.IdPermission })
-                .ForeignKey("dbo.Permission", t => t.IdPermission)
-                .ForeignKey("dbo.Profile", t => t.IdProfile)
-                .Index(t => t.IdProfile)
-                .Index(t => t.IdPermission);
+                .PrimaryKey(t => new { t.ProfileId, t.PermissionId })
+                .ForeignKey("dbo.Permission", t => t.PermissionId)
+                .ForeignKey("dbo.Profile", t => t.ProfileId)
+                .Index(t => t.ProfileId)
+                .Index(t => t.PermissionId);
             
             CreateTable(
                 "dbo.Profile",
@@ -104,16 +103,16 @@
         
         public override void Down()
         {
-            DropForeignKey("dbo.ProfilePermission", "IdProfile", "dbo.Profile");
+            DropForeignKey("dbo.ProfilePermission", "ProfileId", "dbo.Profile");
             DropForeignKey("dbo.UserLogin", "IdUser", "dbo.User");
             DropForeignKey("dbo.User", "ProfileId", "dbo.Profile");
             DropForeignKey("dbo.Talent", "UpdatedBy", "dbo.User");
-            DropForeignKey("dbo.ProfilePermission", "IdPermission", "dbo.Permission");
+            DropForeignKey("dbo.ProfilePermission", "PermissionId", "dbo.Permission");
             DropIndex("dbo.UserLogin", new[] { "IdUser" });
             DropIndex("dbo.Talent", new[] { "UpdatedBy" });
             DropIndex("dbo.User", new[] { "ProfileId" });
-            DropIndex("dbo.ProfilePermission", new[] { "IdPermission" });
-            DropIndex("dbo.ProfilePermission", new[] { "IdProfile" });
+            DropIndex("dbo.ProfilePermission", new[] { "PermissionId" });
+            DropIndex("dbo.ProfilePermission", new[] { "ProfileId" });
             DropTable("dbo.UserLogin");
             DropTable("dbo.Talent");
             DropTable("dbo.User");

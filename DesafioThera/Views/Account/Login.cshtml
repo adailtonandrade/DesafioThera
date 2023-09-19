@@ -1,5 +1,4 @@
-﻿@using DesafioThera.Models
-@model LoginViewModel
+﻿@model Identity.ViewModels.LoginVM
 @{
     ViewBag.Title = "Logon";
 }
@@ -49,11 +48,6 @@
                         @Html.ActionLink("Esqueceu sua senha?", "ForgotPassword")
                     </p>*@
             }
-        </section>
-    </div>
-    <div class="col-md-4">
-        <section id="socialLoginForm">
-            @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
         </section>
     </div>
 </div>

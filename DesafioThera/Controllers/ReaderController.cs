@@ -36,7 +36,7 @@ namespace DesafioThera.Controllers
         // GET: Reader
         public ActionResult Index()
         {
-            var readers = _userAppService.Get(u => u.ProfileId == (int)ProfileEnum.Reader);
+            var readers = _userAppService.Get(u => u.ProfileId == (int)ProfileEnum.Reader && u.Active == ((int)GenericStatusEnum.Active).ToString());
             return View(readers);
         }
 
@@ -70,7 +70,7 @@ namespace DesafioThera.Controllers
                     Cpf = Formatter.RemoveFormattingOfCnpjOrCpf(reader.Cpf),
                     Name = reader.Name.Trim(),
                     NickName = reader.NickName.Trim(),
-                    IdProfile = reader.ProfileId,
+                    ProfileId = reader.ProfileId,
                     CreatedAt = DateTime.Now,
                     Active = activeStatus
                 };

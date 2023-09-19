@@ -10,7 +10,7 @@ namespace Identity.Configuration
     public class ApplicationSignInManager : SignInManager<ApplicationUser, int>
     {
         private readonly IProfileAppService _profileAppService;
-        
+
 
         public ApplicationSignInManager(ApplicationUserManager userManager, IAuthenticationManager authenticationManager, IProfileAppService profileAppService)
             : base(userManager, authenticationManager)
@@ -22,14 +22,14 @@ namespace Identity.Configuration
         {
             return user.GenerateUserIdentityAsync((ApplicationUserManager)UserManager);
         }
-        
+
         public override Task<SignInStatus> PasswordSignInAsync(string userName, string password, bool isPersistent, bool shouldLockout)
         {
             var user = UserManager.FindByEmailAsync(userName).Result;
             if (user != null)
             {
-                var profile = _profileAppService.GetById(user.IdProfile);
-                if(profile.Active.Equals(((int)Domain.Enum.GenericStatusEnum.Inactive).ToString()))
+                var profile = _profileAppService.GetById(user.ProfileId);
+                if (profile.Active.Equals(((int)Domain.Enum.GenericStatusEnum.Inactive).ToString()))
                 {
                     return Task.FromResult((SignInStatus)SignInStatus.LockedOut);
                 }

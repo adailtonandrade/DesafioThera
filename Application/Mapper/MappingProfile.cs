@@ -1,6 +1,7 @@
 ﻿using Application.ViewModels;
 using AutoMapper;
 using Domain.Entities;
+using AutoMapper.Extensions.ExpressionMapping;
 
 namespace Application.Mapper
 {
@@ -10,6 +11,7 @@ namespace Application.Mapper
         {
             return new MapperConfiguration(cfg =>
             {
+                cfg.AddExpressionMapping();
                 #region Profile
                 cfg.CreateMap<Domain.Entities.Profile, ProfileVM>()
                 .ForMember(p => p.ProfilePermissions, opt => opt.MapFrom(p => p.ProfilePermissions)).ReverseMap().PreserveReferences()
@@ -17,10 +19,11 @@ namespace Application.Mapper
                 .ForMember(x => x.Name, opt => opt.MapFrom(y => y.Name.Trim())).ReverseMap();
                 #endregion
                 #region User
-                cfg.CreateMap<UserVM, User>();
+                cfg.CreateMap<UserVM, User>().ReverseMap();
                 #endregion
-                #region User
-                cfg.CreateMap<TalentVM, Talent>();
+                #region Talent
+                cfg.CreateMap<TalentVM, Talent>().ReverseMap();
+                cfg.CreateMap<Talent, TalentDetailsVM>().ReverseMap();
                 #endregion
                 #region Permission
                 cfg.CreateMap<Permission, PermissionVM>().ReverseMap();
