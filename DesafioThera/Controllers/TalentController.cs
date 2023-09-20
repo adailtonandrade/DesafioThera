@@ -7,7 +7,6 @@ using Microsoft.AspNet.Identity;
 using RedWillow.MvcToastrFlash;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Net;
 using System.Web.Mvc;
 using System.Web.Routing;

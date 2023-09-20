@@ -3,7 +3,6 @@ using Microsoft.AspNet.Identity.Owin;
 using Identity.Model;
 using Identity.Configuration;
 using Identity.ViewModels;
-using Domain.Enum;
 using System.Collections.Generic;
 using Application.Interfaces;
 using System.Security.Claims;

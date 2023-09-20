@@ -127,7 +127,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IoC\NinjectConfig.cs" />
-    <Compile Include="JWTConfig\IdentityService.cs" />
+    <Compile Include="JWTConfig\JWTService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
