@@ -1,1 +1,1 @@
-# Projeto desenvovlido como parte de processo seletivo.
+# Projeto desenvolvido como parte de processo seletivo.
