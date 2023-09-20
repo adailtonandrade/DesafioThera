@@ -73,8 +73,6 @@
     <Compile Include="Validations\CompareEqualsAttribute.cs" />
     <Compile Include="Validations\IsCpfValidAttribute.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Util\Extension Methods\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -2,13 +2,9 @@
 using Application.ViewModels;
 using DesafioApi.CustomAttribute;
 using DesafioApi.ViewModel;
-using Domain.Entities;
 using Domain.Enum;
-using Domain.Util;
-using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http.Headers;

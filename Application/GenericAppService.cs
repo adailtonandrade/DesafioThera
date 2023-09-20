@@ -1,5 +1,6 @@
 ﻿using Domain.Interfaces.Data;
 
+
 namespace Application
 {
     public class GenericAppService

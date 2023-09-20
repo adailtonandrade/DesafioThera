@@ -1,5 +1,4 @@
 ﻿using ApiMultiPartFormData;
-using ApiMultiPartFormData.Services.Implementations;
 using ApiMultiPartFormData.Services.Interfaces;
 using DesafioApi.ModelBind;
 using Microsoft.Owin.Security.OAuth;
