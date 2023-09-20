@@ -135,6 +135,8 @@ namespace Application
         public TalentDetailsVM GetDetailsById(int id)
         {
             var talent = _talentService.Get(t => t.Id == id, null, "UserWhoUpdated").FirstOrDefault();
+            if (talent == null)
+                return null;
             TalentDetailsVM talentDetails = _mapper.Map<Talent, TalentDetailsVM>(talent);
             talentDetails.UpdatedBy = talent.UserWhoUpdated.Name;
             return talentDetails;

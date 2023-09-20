@@ -32,17 +32,6 @@ namespace DesafioThera.Controllers
             return View(talents);
         }
 
-        // GET: Talent/Details/5
-        [ClaimsAuthorize(claimType: TypePermissionEnum.Talents, claimValue: ValuePermissionEnum.Consult)]
-        public ActionResult Details(int id)
-        {
-            TalentDetailsVM talent = _talentAppService.GetDetailsById(id);
-            if (talent == null)
-                return new RedirectToRouteResult(new RouteValueDictionary(new { action = "NotFound", controller = "Error" }));
-
-            return View(talent);
-        }
-
         // GET: Talent/Create
         [ClaimsAuthorize(claimType: TypePermissionEnum.Talents, claimValue: ValuePermissionEnum.Create)]
         public ActionResult Create()
@@ -104,6 +93,17 @@ namespace DesafioThera.Controllers
             return View(talent);
         }
 
+        // GET: Talent/Details/5
+        [ClaimsAuthorize(claimType: TypePermissionEnum.Talents, claimValue: ValuePermissionEnum.Consult)]
+        public ActionResult Details(int id)
+        {
+            TalentDetailsVM talent = _talentAppService.GetDetailsById(id);
+            if (talent == null)
+                return new RedirectToRouteResult(new RouteValueDictionary(new { action = "NotFound", controller = "Error" }));
+
+            return View(talent);
+        }
+
         // GET: Talent/DownloadResume
         [ClaimsAuthorize(claimType: TypePermissionEnum.Talents, claimValue: ValuePermissionEnum.Consult)]
         public ActionResult DownloadResume(int talentId)
@@ -115,12 +115,11 @@ namespace DesafioThera.Controllers
             return File(talentResume.FileContent, talentResume.ContentType, talentResume.FileName);
         }
 
-
         // GET: Talent/Delete/5
         [ClaimsAuthorize(claimType: TypePermissionEnum.Talents, claimValue: ValuePermissionEnum.Deactivate)]
-        public ActionResult Delete(int talentId)
+        public ActionResult Delete(int id)
         {
-            var talent = _talentAppService.GetById(talentId);
+            var talent = _talentAppService.GetById(id);
             if (talent == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -131,16 +130,16 @@ namespace DesafioThera.Controllers
         // POST: Talent/Delete/5
         [HttpPost, ActionName("Delete")]
         [ClaimsAuthorize(claimType: TypePermissionEnum.Talents, claimValue: ValuePermissionEnum.Deactivate)]
-        public ActionResult DeleteConfirmed(int talentId)
+        public ActionResult DeleteConfirmed(int id)
         {
-            _errors = _talentAppService.Delete(talentId);
+            _errors = _talentAppService.Delete(id);
             if (_errors.Count == 0)
             {
                 this.Flash(Toastr.SUCCESS, String.Format("Talento Desativado com sucesso"));
                 return RedirectToAction("Index");
             }
             ModelStateMessage.AddModelStateError(_errors, string.Empty, ModelState);
-            return RedirectToAction("Delete", new { talentId });
+            return RedirectToAction("Delete", new { id });
         }
     }
 }
