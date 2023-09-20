@@ -1,13 +1,23 @@
 ﻿@model IEnumerable<Application.ViewModels.UserVM>
-
+@using Application.ViewModels;
+@using System.Security.Claims;
+@using Domain.Enum;
 @{
     ViewBag.Title = "Listagem de Administrador(a)";
+    var user = (ClaimsIdentity)User.Identity;
 }
 
 <h2>@ViewBag.Title</h2>
 
 <p>
-    @Html.ActionLink("Cadastrar Novo(a) Administrador(a)", "Create")
+    @if (LayoutVM.VerifyClaimExists(TypePermissionEnum.Administrators, ValuePermissionEnum.Create, user))
+    {
+        @Html.ActionLink("Cadastrar Novo(a) Administrador(a)", "Create")
+    }
+    @if (ViewBag.Password != null)
+    {
+        <br /><h3>Caso a senha não chegue no e-mail, <b>@ViewBag.Password</b></h3>
+    }
 </p>
 <table class="table">
     <tr>
@@ -45,12 +55,21 @@
                 @Html.DisplayFor(modelItem => item.NickName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Active)
+                @item.StatusName(item.Active)
             </td>
             <td>
-                @Html.ActionLink("Editar", "Edit", new { id = item.Id }) |
-                @Html.ActionLink("Detalhes", "Details", new { id = item.Id }) |
-                @Html.ActionLink("Desativar", "Delete", new { id = item.Id })
+                @if (LayoutVM.VerifyClaimExists(TypePermissionEnum.Administrators, ValuePermissionEnum.Update, user))
+                {
+                    @Html.ActionLink("Editar |", "Edit", new { id = item.Id })
+                }
+                @if (LayoutVM.VerifyClaimExists(TypePermissionEnum.Administrators, ValuePermissionEnum.Consult, user))
+                {
+                    @Html.ActionLink("Detalhes", "Details", new { id = item.Id })
+                }
+                @if (LayoutVM.VerifyClaimExists(TypePermissionEnum.Administrators, ValuePermissionEnum.Deactivate, user))
+                {
+                    @Html.ActionLink(" | Desativar", "Delete", new { id = item.Id })
+                }
             </td>
         </tr>
     }

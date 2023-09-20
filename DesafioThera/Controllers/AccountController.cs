@@ -195,6 +195,7 @@ namespace DesafioThera.Controllers
                     {
                         _userManager.Delete(user);
                     }
+                    TempData["password"] = passwd;
                     return RedirectToAction(
                         defaultStartPage.GetType().GetProperty("Action").GetValue(defaultStartPage, null).ToString(),
                         defaultStartPage.GetType().GetProperty("Controller").GetValue(defaultStartPage, null).ToString());

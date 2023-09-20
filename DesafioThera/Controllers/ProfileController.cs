@@ -106,9 +106,9 @@ namespace DesafioThera.Controllers
 
         // GET: Profile/Delete/5
         [ClaimsAuthorize(claimType: TypePermissionEnum.Profiles, claimValue: ValuePermissionEnum.Deactivate)]
-        public ActionResult Delete(int profileId)
+        public ActionResult Delete(int id)
         {
-            var profile = _profileAppService.GetById(profileId);
+            var profile = _profileAppService.GetById(id);
             if (profile != null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.NotFound);
@@ -119,9 +119,9 @@ namespace DesafioThera.Controllers
         // POST: Profile/Delete/5
         [HttpPost, ActionName("Delete")]
         [ClaimsAuthorize(claimType: TypePermissionEnum.Profiles, claimValue: ValuePermissionEnum.Deactivate)]
-        public ActionResult DeleteConfirmed(int profileId)
+        public ActionResult DeleteConfirmed(int id)
         {
-            _errors = _profileAppService.Delete(profileId);
+            _errors = _profileAppService.Delete(id);
             if (_errors?.Count == 0)
             {
                 this.Flash(Toastr.SUCCESS, String.Format("Perfil Desativado com sucesso"));
@@ -129,7 +129,7 @@ namespace DesafioThera.Controllers
 
             }
             ModelStateMessage.AddModelStateError(_errors, string.Empty, ModelState);
-            return RedirectToAction("Delete", new { profileId });
+            return RedirectToAction("Delete", new { id });
         }
 
         private void GetPermissionIds(ProfileVM profile)

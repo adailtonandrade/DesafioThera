@@ -6,6 +6,11 @@ namespace DesafioThera.Controllers
     {
         public ActionResult Index()
         {
+            if (TempData["password"] != null)
+            {
+                ViewBag.Password = "Aqui está a senha gerada: " + TempData["password"].ToString();
+                TempData.Remove("password");
+            }
             return View();
         }
 

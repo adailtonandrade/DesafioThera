@@ -36,6 +36,11 @@ namespace DesafioThera.Controllers
         [ClaimsAuthorize(claimType: TypePermissionEnum.Administrators, claimValue: ValuePermissionEnum.Consult)]
         public ActionResult Index()
         {
+            if (TempData["password"] != null)
+            {
+                ViewBag.Password = "Aqui está a senha gerada: " + TempData["password"].ToString();
+                TempData.Remove("password");
+            }
             var administrators = _userAppService.Get(u => u.ProfileId == (int)ProfileEnum.Administrator && u.Active == ((int)GenericStatusEnum.Active).ToString());
             return View(administrators);
         }
@@ -88,6 +93,7 @@ namespace DesafioThera.Controllers
                     {
                         _userManager.Delete(user);
                     }
+                    TempData["password"] = passwd;
                     return RedirectToAction(
                         defaultBackPage.GetType().GetProperty("Action").GetValue(defaultBackPage, null).ToString(),
                         defaultBackPage.GetType().GetProperty("Controller").GetValue(defaultBackPage, null).ToString());
@@ -146,6 +152,10 @@ namespace DesafioThera.Controllers
         public ActionResult Details(int id)
         {
             var administrator = _userAppService.GetById(id);
+            if (administrator == null)
+            {
+                return new RedirectToRouteResult(new RouteValueDictionary(new { action = "NotFound", controller = "Error" }));
+            }
             if (administrator != null && administrator.ProfileId != (int)ProfileEnum.Administrator)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);

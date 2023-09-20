@@ -37,6 +37,11 @@ namespace DesafioThera.Controllers
         [ClaimsAuthorize(claimType: TypePermissionEnum.Secretaries, claimValue: ValuePermissionEnum.Consult)]
         public ActionResult Index()
         {
+            if (TempData["password"] != null)
+            {
+                ViewBag.Password = "Aqui está a senha gerada: " + TempData["password"].ToString();
+                TempData.Remove("password");
+            }
             var secretaries = _userAppService.Get(u => u.ProfileId == (int)ProfileEnum.Secretary && u.Active == ((int)GenericStatusEnum.Active).ToString());
             return View(secretaries);
         }
@@ -89,6 +94,7 @@ namespace DesafioThera.Controllers
                     {
                         _userManager.Delete(user);
                     }
+                    TempData["password"] = passwd;
                     return RedirectToAction(
                         defaultBackPage.GetType().GetProperty("Action").GetValue(defaultBackPage, null).ToString(),
                         defaultBackPage.GetType().GetProperty("Controller").GetValue(defaultBackPage, null).ToString());
@@ -110,17 +116,16 @@ namespace DesafioThera.Controllers
         [ClaimsAuthorize(claimType: TypePermissionEnum.Secretaries, claimValue: ValuePermissionEnum.Update)]
         public ActionResult Edit(int id)
         {
-            Response.Cache.SetCacheability(HttpCacheability.NoCache);
-            UserVM user = _userAppService.GetById(id);
-            if (user == null)
+            UserVM secretary = _userAppService.GetById(id);
+            if (secretary == null)
             {
                 return new RedirectToRouteResult(new RouteValueDictionary(new { action = "NotFound", controller = "Error" }));
             }
-            else if (user != null && user.ProfileId != (int)ProfileEnum.Secretary)
+            else if (secretary != null && secretary.ProfileId != (int)ProfileEnum.Secretary)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            return View(user);
+            return View(secretary);
         }
 
         // POST: Secretary/Edit
@@ -148,6 +153,10 @@ namespace DesafioThera.Controllers
         public ActionResult Details(int id)
         {
             var secretary = _userAppService.GetById(id);
+            if (secretary == null)
+            {
+                return new RedirectToRouteResult(new RouteValueDictionary(new { action = "NotFound", controller = "Error" }));
+            }
             if (secretary != null && secretary.ProfileId != (int)ProfileEnum.Secretary)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -157,9 +166,9 @@ namespace DesafioThera.Controllers
 
         // GET: Secretary/Delete/5
         [ClaimsAuthorize(claimType: TypePermissionEnum.Secretaries, claimValue: ValuePermissionEnum.Deactivate)]
-        public ActionResult Delete(int secretaryId)
+        public ActionResult Delete(int id)
         {
-            var secretary = _userAppService.GetById(secretaryId);
+            var secretary = _userAppService.GetById(id);
             if (secretary != null && secretary.ProfileId != (int)ProfileEnum.Secretary)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -170,16 +179,16 @@ namespace DesafioThera.Controllers
         // POST: Secretary/Delete/5
         [HttpPost, ActionName("Delete")]
         [ClaimsAuthorize(claimType: TypePermissionEnum.Secretaries, claimValue: ValuePermissionEnum.Deactivate)]
-        public ActionResult DeleteConfirmed(int secretaryId)
+        public ActionResult DeleteConfirmed(int id)
         {
-            errors = _userAppService.Delete(secretaryId);
+            errors = _userAppService.Delete(id);
             if (errors.Count == 0)
             {
                 this.Flash(Toastr.SUCCESS, String.Format("Secretária(o) Desativada(o) com sucesso"));
                 return RedirectToAction("Index");
             }
             ModelStateMessage.AddModelStateError(errors, string.Empty, ModelState);
-            return RedirectToAction("Delete", new { secretaryId });
+            return RedirectToAction("Delete", new { id });
         }
     }
 }

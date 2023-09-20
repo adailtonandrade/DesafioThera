@@ -37,6 +37,11 @@ namespace DesafioThera.Controllers
         // GET: Reader
         public ActionResult Index()
         {
+            if (TempData["password"] != null)
+            {
+                ViewBag.Password = "Aqui está a senha gerada: " + TempData["password"].ToString();
+                TempData.Remove("password");
+            }
             var readers = _userAppService.Get(u => u.ProfileId == (int)ProfileEnum.Reader && u.Active == ((int)GenericStatusEnum.Active).ToString());
             return View(readers);
         }
@@ -50,7 +55,7 @@ namespace DesafioThera.Controllers
             return View(reader);
         }
 
-        
+
         // POST: Reader/Create
         [HttpPost]
         [ClaimsAuthorize(claimType: TypePermissionEnum.Readers, claimValue: ValuePermissionEnum.Create)]
@@ -90,6 +95,7 @@ namespace DesafioThera.Controllers
                     {
                         _userManager.Delete(user);
                     }
+                    TempData["password"] = passwd;
                     return RedirectToAction(
                         defaultBackPage.GetType().GetProperty("Action").GetValue(defaultBackPage, null).ToString(),
                         defaultBackPage.GetType().GetProperty("Controller").GetValue(defaultBackPage, null).ToString());
@@ -111,7 +117,6 @@ namespace DesafioThera.Controllers
         [ClaimsAuthorize(claimType: TypePermissionEnum.Readers, claimValue: ValuePermissionEnum.Update)]
         public ActionResult Edit(int id)
         {
-            Response.Cache.SetCacheability(HttpCacheability.NoCache);
             UserVM reader = _userAppService.GetById(id);
             if (reader == null)
             {
@@ -150,6 +155,10 @@ namespace DesafioThera.Controllers
         public ActionResult Details(int id)
         {
             var reader = _userAppService.GetById(id);
+            if (reader == null)
+            {
+                return new RedirectToRouteResult(new RouteValueDictionary(new { action = "NotFound", controller = "Error" }));
+            }
             if (reader != null && reader.ProfileId != (int)ProfileEnum.Reader)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -159,9 +168,9 @@ namespace DesafioThera.Controllers
 
         // GET: Reader/Delete/5
         [ClaimsAuthorize(claimType: TypePermissionEnum.Readers, claimValue: ValuePermissionEnum.Deactivate)]
-        public ActionResult Delete(int readerId)
+        public ActionResult Delete(int id)
         {
-            var reader = _userAppService.GetById(readerId);
+            var reader = _userAppService.GetById(id);
             if (reader != null && reader.ProfileId != (int)ProfileEnum.Reader)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -172,16 +181,16 @@ namespace DesafioThera.Controllers
         // POST: Reader/Delete/5
         [HttpPost, ActionName("Delete")]
         [ClaimsAuthorize(claimType: TypePermissionEnum.Readers, claimValue: ValuePermissionEnum.Deactivate)]
-        public ActionResult DeleteConfirmed(int readerId)
+        public ActionResult DeleteConfirmed(int id)
         {
-            errors = _userAppService.Delete(readerId);
+            errors = _userAppService.Delete(id);
             if (errors.Count == 0)
             {
                 this.Flash(Toastr.SUCCESS, String.Format("Leitor(a) Desativado(a) com sucesso"));
                 return RedirectToAction("Index");
             }
             ModelStateMessage.AddModelStateError(errors, string.Empty, ModelState);
-            return RedirectToAction("Delete", new { readerId });
+            return RedirectToAction("Delete", new { id });
         }
     }
 }
