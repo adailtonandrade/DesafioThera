@@ -1,4 +1,8 @@
-﻿using Microsoft.Owin.Security.OAuth;
+﻿using ApiMultiPartFormData;
+using ApiMultiPartFormData.Services.Implementations;
+using ApiMultiPartFormData.Services.Interfaces;
+using DesafioApi.ModelBind;
+using Microsoft.Owin.Security.OAuth;
 using System.Web.Http;
 
 namespace DesafioApi
@@ -19,6 +23,11 @@ namespace DesafioApi
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
+            config.Formatters.Add(new MultipartFormDataFormatter(
+                new IModelBinderService[]
+                {
+                    new HttpPostedFileBaseModelBinderService()
+                }));
         }
     }
 }

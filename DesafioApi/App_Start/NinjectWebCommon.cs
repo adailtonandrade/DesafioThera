@@ -29,6 +29,7 @@ namespace DesafioApi.App_Start
     using Microsoft.Web.Infrastructure.DynamicModuleHelper;
     using System;
     using CrossCutting.JWTConfig;
+    using Ninject.Extensions.NamedScope;
 
     public static class NinjectWebCommon
     {
@@ -131,7 +132,7 @@ namespace DesafioApi.App_Start
 
             #region Universal
             kernel.Bind<IUnitOfWork>().To<UnitOfWork>();
-            kernel.Bind<ModelContext>().ToSelf().InTransientScope();
+            kernel.Bind<ModelContext>().ToSelf().InCallScope();
             kernel.Bind<JWTService>().ToSelf().InTransientScope();
             #endregion
             kernel.Unbind<ModelValidatorProvider>();

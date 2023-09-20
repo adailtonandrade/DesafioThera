@@ -68,6 +68,7 @@ namespace DesafioApi.Controllers
             {
                 var user = await _userManager.FindByEmailAsync(model.Email);
                 var userClaims = GetUserClaims(user);
+                userClaims.Add(new Claim("UserId", user.Id.ToString()));
                 var response = _jwtService.GenerateToken(model, userClaims);
                 return Ok(new { message = "Autenticado com Sucesso", Token = response });
             }

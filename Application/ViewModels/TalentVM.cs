@@ -4,6 +4,7 @@ using Domain.Validations;
 using System;
 using Domain.Enum;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace Application.ViewModels
 {
@@ -53,6 +54,20 @@ namespace Application.ViewModels
                 return "Ativo";
             return "Inativo";
         }
+    }
+    public class TalentResumeVM
+    {
+        public TalentResumeVM()
+        {
+            Errors = new List<string>();
+        }
+        public string FileName { get; set; }
+
+        public byte[] FileContent { get; set; }
+
+        public string ContentType { get; set; }
+
+        public List<string> Errors { get; set; }
     }
 
     public class TalentDetailsVM : TalentVM

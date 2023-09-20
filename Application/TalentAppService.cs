@@ -51,21 +51,15 @@ namespace Application
         {
             try
             {
-                var users = _talentService.Get(t => t.Id == talent.Id);
-                if (users == null || users.Count() == 0)
-                {
-                    BeginTransaction();
-                    talent.Active = ((int)GenericStatusEnum.Inactive).ToString();
-                    _talentService.Update(talent);
-                    SaveChanges();
-                    Commit();
-                }
-                else
-                    _errors.Add(String.Format("O Talento {0} não pode ser desativado pois não foi encontrado na base de dados", talent.FullName));
+                BeginTransaction();
+                talent.Active = ((int)GenericStatusEnum.Inactive).ToString();
+                _talentService.Update(talent);
+                SaveChanges();
+                Commit();
             }
             catch (Exception e)
             {
-                _errors.Add(String.Format("Ocorreu um erro ao desativar o Perfil"));
+                _errors.Add(String.Format("Ocorreu um erro ao desativar o Talento"));
                 Rollback();
             }
             return _errors;
@@ -107,6 +101,37 @@ namespace Application
             return _mapper.Map<Talent, TalentVM>(_talentService.GetById(id));
         }
 
+        public TalentResumeVM GetResumeByTalentId(int id)
+        {
+            TalentResumeVM talentResume = new TalentResumeVM();
+            var talent = _talentService.Get(t => t.Id == id && t.Active == ((int)GenericStatusEnum.Active).ToString()).FirstOrDefault();
+            if (talent == null)
+            {
+                talentResume.Errors.Add("O Talento não foi encontrado na base de dados ou encontra-se inativo");
+                return talentResume;
+            }
+            string contentType;
+            switch (Path.GetExtension(talent.ResumeFileName).ToLower())
+            {
+                case ".pdf":
+                    contentType = "application/pdf";
+                    break;
+                case ".doc":
+                    contentType = "application/msword";
+                    break;
+                case ".docx":
+                    contentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+                    break;
+                default:
+                    contentType = "application/octet-stream";
+                    break;
+            }
+            talentResume.ContentType = contentType;
+            talentResume.FileName = talent.ResumeFileName;
+            talentResume.FileContent = talent.ResumeFileData;
+            return talentResume;
+        }
+
         public TalentDetailsVM GetDetailsById(int id)
         {
             var talent = _talentService.Get(t => t.Id == id, null, "UserWhoUpdated").FirstOrDefault();
@@ -123,7 +148,7 @@ namespace Application
                 talent.Active = ((int)GenericStatusEnum.Active).ToString();
                 if (!IsFileValid(obj.Resume))
                     _errors.Add("O Arquivo de Currículo deve esta no formato PDF, DOC ou DOCX");
-                _errors = _talentService.Validate(talent);
+                _errors.AddRange(_talentService.Validate(talent));
                 if (_errors?.Count == 0)
                 {
                     talent.ResumeFileName = obj.Resume.FileName;

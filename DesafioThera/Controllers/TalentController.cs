@@ -108,29 +108,11 @@ namespace DesafioThera.Controllers
         [ClaimsAuthorize(claimType: TypePermissionEnum.Talents, claimValue: ValuePermissionEnum.Consult)]
         public ActionResult DownloadResume(int talentId)
         {
-            var talent = _talentAppService.GetById(talentId);
-            if (talent != null && talent.Active != ((int)GenericStatusEnum.Active).ToString())
+            var talentResume = _talentAppService.GetResumeByTalentId(talentId);
+            if (talentResume != null && talentResume.Errors.Count > 0)
                 return HttpNotFound();
-            string mimeType;
-            switch (Path.GetExtension(talent.ResumeFileName).ToLower())
-            {
-                case ".pdf":
-                    mimeType = "application/pdf";
-                    break;
-                case ".doc":
-                    mimeType = "application/msword";
-                    break;
-                case ".docx":
-                    mimeType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
-                    break;
-                default:
-                    mimeType = "application/octet-stream";
-                    break;
-            }
 
-            byte[] fileBytes = talent.ResumeFileData;
-
-            return File(fileBytes, mimeType, talent.ResumeFileName);
+            return File(talentResume.FileContent, talentResume.ContentType, talentResume.FileName);
         }
 
 

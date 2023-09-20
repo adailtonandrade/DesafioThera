@@ -24,7 +24,6 @@ namespace CrossCutting.JWTConfig
             var permClaims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim("userid", "userId")
             };
 
             permClaims.AddRange(userClaims);
