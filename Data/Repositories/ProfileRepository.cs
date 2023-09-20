@@ -19,11 +19,11 @@ namespace Data.Repositories
         public List<Permission> GetPermissions(int idProfile)
         {
             var connection = _context.Database.Connection;
-            var transaction = _context.Database.CurrentTransaction;
+            //var transaction = _context.Database.CurrentTransaction;
             var sql = string.Format(@"SELECT P.CLAIMTYPE AS ClaimType, P.CLAIMVALUE AS ClaimValue, P.ID AS Id FROM PERMISSION P
-                    INNER JOIN ACCESS A ON A.IDPERMISSION = P.ID
-                    WHERE A.IDPROFILE = {0}", idProfile);
-            List<Permission> list = connection.Query<Permission>(sql, null, transaction != null ? transaction.UnderlyingTransaction : null).ToList();
+                    INNER JOIN PROFILEPERMISSION A ON A.PERMISSIONID = P.ID
+                    WHERE A.PROFILEID = {0}", idProfile);
+            List<Permission> list = connection.Query<Permission>(sql).ToList();
             return list;
         }
     }

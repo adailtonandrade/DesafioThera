@@ -8,14 +8,14 @@ namespace Data.EntityConfig
         public ProfilePermissionConfiguration()
         {
             ToTable(nameof(ProfilePermission));
-            HasKey(a => new { a.IdProfile, a.IdPermission});
+            HasKey(a => new { a.ProfileId, a.PermissionId});
 
-            Property(a => a.IdProfile)
-                .HasColumnName(nameof(ProfilePermission.IdProfile))
+            Property(a => a.ProfileId)
+                .HasColumnName(nameof(ProfilePermission.ProfileId))
                 .IsRequired();
 
-            Property(a => a.IdPermission)
-                .HasColumnName(nameof(ProfilePermission.IdPermission))
+            Property(a => a.PermissionId)
+                .HasColumnName(nameof(ProfilePermission.PermissionId))
                 .IsRequired();
 
             Property(a => a.IdUser)
@@ -23,12 +23,12 @@ namespace Data.EntityConfig
 
             HasRequired(a => a.Profile)
                 .WithMany(p => p.ProfilePermissions)
-                .HasForeignKey(a => a.IdProfile)
+                .HasForeignKey(a => a.ProfileId)
                 .WillCascadeOnDelete(false);
 
             HasRequired(a => a.Permission)
                 .WithMany(pe => pe.ProfilePermissions)
-                .HasForeignKey(a => a.IdPermission)
+                .HasForeignKey(a => a.PermissionId)
                 .WillCascadeOnDelete(false);
         }
 

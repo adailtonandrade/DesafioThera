@@ -1,11 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
-VisualStudioVersion = 16.0.32901.82
+VisualStudioVersion = 16.0.34031.81
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesafioThera", "DesafioThera\DesafioThera.csproj", "{472DB045-450A-4909-87C5-068EF05BF3A5}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesafioThera.Tests", "DesafioThera.Tests\DesafioThera.Tests.csproj", "{6FE65637-6ED2-4CED-A676-B04DF04FDE35}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4 - Infra", "4 - Infra", "{0088218C-1E8A-432C-8DC6-0DE5909ECC50}"
 EndProject
@@ -33,6 +31,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 - Service", "2 - Service"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service", "Service\Service.csproj", "{089BACB3-C5CC-4EF0-8135-136C522A0AC2}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5 - WebApi", "5 - WebApi", "{3F5FE35A-91D8-45D4-A988-A10FB1C54D7D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesafioApi", "DesafioApi\DesafioApi.csproj", "{C87D73F5-CE3C-4C91-A58A-5EF463EBECD9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,10 +45,6 @@ Global
 		{472DB045-450A-4909-87C5-068EF05BF3A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{472DB045-450A-4909-87C5-068EF05BF3A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{472DB045-450A-4909-87C5-068EF05BF3A5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6FE65637-6ED2-4CED-A676-B04DF04FDE35}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6FE65637-6ED2-4CED-A676-B04DF04FDE35}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6FE65637-6ED2-4CED-A676-B04DF04FDE35}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6FE65637-6ED2-4CED-A676-B04DF04FDE35}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F3B09A02-E147-4159-81FA-8D3939285DA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F3B09A02-E147-4159-81FA-8D3939285DA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F3B09A02-E147-4159-81FA-8D3939285DA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -71,6 +69,10 @@ Global
 		{089BACB3-C5CC-4EF0-8135-136C522A0AC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{089BACB3-C5CC-4EF0-8135-136C522A0AC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{089BACB3-C5CC-4EF0-8135-136C522A0AC2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C87D73F5-CE3C-4C91-A58A-5EF463EBECD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C87D73F5-CE3C-4C91-A58A-5EF463EBECD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C87D73F5-CE3C-4C91-A58A-5EF463EBECD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C87D73F5-CE3C-4C91-A58A-5EF463EBECD9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -85,6 +87,7 @@ Global
 		{3C25FCE6-5AA0-4DA5-B51A-B7DDFEDA830E} = {0088218C-1E8A-432C-8DC6-0DE5909ECC50}
 		{3AC75318-A73E-4BE2-B3FE-F2DEFB2680E0} = {3C25FCE6-5AA0-4DA5-B51A-B7DDFEDA830E}
 		{089BACB3-C5CC-4EF0-8135-136C522A0AC2} = {C3593F05-0B05-4DA1-A145-0A0DDD149C9D}
+		{C87D73F5-CE3C-4C91-A58A-5EF463EBECD9} = {3F5FE35A-91D8-45D4-A988-A10FB1C54D7D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {16B132E0-596B-47BC-BB6B-CF26ED1D4465}

@@ -1,12 +1,10 @@
 ﻿@model Application.ViewModels.UserVM
-@using Domain.Util.Internationalization;
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = @Language.MyProfile;
+    ViewBag.Title = "Meu Perfil";
 }
 
 <div class="portlet light">
-    @Styles.Render("~/MetronicMaterial/css")
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="portlet light md-shadow-none">
@@ -14,10 +12,10 @@
                     <h3 class="text-center float-left col-sm-offset-5 col-xs-offset-5 col-lg-offset-5 col-md-offset-5">@ViewBag.Title</h3>
                     <ul class="nav nav-tabs">
                         <li class="active">
-                            <a href="#tab_1_1" data-toggle="tab" aria-expanded="true"><i class="fa fa-user"></i>@Language.User</a>
+                            <a href="#tab_1_1" data-toggle="tab" aria-expanded="true"><i class="fa fa-user"></i>Usuário</a>
                         </li>
                         <li class="">
-                            <a href="#tab_1_2" data-toggle="tab" aria-expanded="false"><i class="glyphicon glyphicon-lock"></i>@Language.ChangePassword</a>
+                            <a href="#tab_1_2" data-toggle="tab" aria-expanded="false"><i class="glyphicon glyphicon-lock"></i>Alterar Senha</a>
                         </li>
                     </ul>
                 </div>
@@ -28,26 +26,22 @@
                             <div class="row">
                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                     <div class="form-group form-md-line-input">
-                                        <label class="control-label bold">@Language.Name: </label>
+                                        <label class="control-label bold">@Html.DisplayNameFor(model => model.Name): </label>
                                         <input type="text" value="@Model.Name" readonly class="form-control bg-white">
                                     </div>
                                     <div class="form-group form-md-line-input">
-                                        <label class="control-label bold">E-mail: </label>
+                                        <label class="control-label bold">@Html.DisplayNameFor(model => model.Email): </label>
                                         <input type="text" value="@Model.Email" readonly class="form-control bg-white">
                                     </div>
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                     <div class="form-group form-md-line-input">
-                                        <label class="control-label bold">CPF: </label>
+                                        <label class="control-label bold">@Html.DisplayNameFor(model => model.Cpf): </label>
                                         <input type="text" id="cpf" readonly class="form-control bg-white" value="@Model.Cpf">
-                                    </div>
-                                    <div class="form-group form-md-line-input">
-                                        <label class="control-label bold">@Language.Profile: </label>
-                                        <input type="text" value="@Model.Profile.Name" disabled class="form-control bg-white">
                                     </div>
                                 </div>
                                 <div class="col-md-12 text-center">
-                                    <a class="btn default btn-circle" href="@Url.Action("Index")"><i class="fa fa-arrow-left"></i>  @Html.DisplayName(Language.Back)</a>
+                                    <a class="btn default btn-circle" href="@Url.Action("Index")"><i class="fa fa-arrow-left"></i>  @Html.DisplayName("Voltar")</a>
                                 </div>
                             </div>
                         </div>
@@ -59,7 +53,7 @@
 
                         <!-- END CHANGE PASSWORD TAB -->
                     </div>
-                    
+
                 </div>
             </div>
         </div>
@@ -68,27 +62,4 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jqueryval")
-    @Scripts.Render("~/bundles/inputmask")
-    @Scripts.Render("~/MetronicMaterial/js")
-    <script>
-        var elementsArray = [];
-        @foreach(KeyValuePair<string, ModelState> entry in @ViewData.ModelState)
-        {
-            if(entry.Value.Errors.Count > 0)
-            {
-                if (!String.IsNullOrEmpty(entry.Key))
-                {
-                    @:elementsArray.push("@entry.Key");
-                }
-                else
-                {
-                    @:$("#ValidationSummaryPortlet").removeClass("hidden");
-                }
-            }
-        }
-        AddHasErrorInParent(elementsArray);
-        var im = new Inputmask("999.999.999-99");
-        im.mask($("#cpf"));
-    </script>
-    <script src="~/Scripts/UserDetails.js"></script>
 }

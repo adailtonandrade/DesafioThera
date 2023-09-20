@@ -21,7 +21,7 @@ namespace Identity.Context
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<ApplicationUser>().ToTable("USER").Property(x => x.Id).HasColumnName("Id");
-            modelBuilder.Entity<ApplicationUser>().ToTable("USER").Property(x => x.IdProfile).HasColumnName("IdProfile");
+            modelBuilder.Entity<ApplicationUser>().ToTable("USER").Property(x => x.ProfileId).HasColumnName("ProfileId");
             modelBuilder.Entity<ApplicationUser>().ToTable("USER").Property(x => x.Cpf).HasColumnName("Cpf");
             modelBuilder.Entity<ApplicationUser>().ToTable("USER").Property(x => x.Name).HasColumnName("Name");
             modelBuilder.Entity<ApplicationUser>().ToTable("USER").Property(x => x.Email).HasColumnName("Email");
@@ -39,24 +39,23 @@ namespace Identity.Context
             modelBuilder.Entity<ApplicationUser>().ToTable("USER").Property(x => x.CreatedAt).HasColumnName("CreatedAt");
             modelBuilder.Entity<ApplicationUser>().ToTable("USER").HasRequired(u => u.Profile)
                 .WithMany(p => p.UserList)
-                .HasForeignKey(u => u.IdProfile)
+                .HasForeignKey(u => u.ProfileId)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<CustomRole>().ToTable("PROFILE").Property(x => x.Id).HasColumnName("Id");
             modelBuilder.Entity<CustomRole>().ToTable("PROFILE").Property(x => x.Name).HasColumnName("Name");
 
-            modelBuilder.Entity<ProfilePermission>().ToTable("ACCESS").Property(x => x.IdPermission).HasColumnName("IdPermission");
-            modelBuilder.Entity<ProfilePermission>().ToTable("ACCESS").Property(x => x.RoleId).HasColumnName("IdProfile");
-            modelBuilder.Entity<ProfilePermission>().ToTable("ACCESS").Property(x => x.UserId).HasColumnName("IdUser");
-            modelBuilder.Entity<ProfilePermission>().ToTable("ACCESS").HasRequired(u => u.Permission)
+            modelBuilder.Entity<ProfilePermission>().ToTable("PROFILEPERMISSION").Property(x => x.PermissionId).HasColumnName("PermissionId");
+            modelBuilder.Entity<ProfilePermission>().ToTable("PROFILEPERMISSION").Property(x => x.RoleId).HasColumnName("ProfileId");
+            modelBuilder.Entity<ProfilePermission>().ToTable("PROFILEPERMISSION").Property(x => x.UserId).HasColumnName("IdUser");
+            modelBuilder.Entity<ProfilePermission>().ToTable("PROFILEPERMISSION").HasRequired(u => u.Permission)
                 .WithMany(p => p.ProfilePermissions)
-                .HasForeignKey(u => u.IdPermission)
+                .HasForeignKey(u => u.PermissionId)
                 .WillCascadeOnDelete(false);
-            modelBuilder.Entity<ProfilePermission>().ToTable("ACCESS").HasRequired(u => u.Profile)
+            modelBuilder.Entity<ProfilePermission>().ToTable("PROFILEPERMISSION").HasRequired(u => u.Profile)
                 .WithMany(p => p.ProfilePermissions)
                 .HasForeignKey(u => u.RoleId)
                 .WillCascadeOnDelete(false);
-            //modelBuilder.Entity<CustomPermissionRole>().ToTable("ACCESS").HasKey(r => new { r.UserId, r.RoleId });
 
             modelBuilder.Entity<CustomClaim>().ToTable("PERMISSION").Property(x => x.Id).HasColumnName("Id");
             modelBuilder.Entity<CustomClaim>().ToTable("PERMISSION").Property(x => x.ClaimType).HasColumnName("ClaimType");

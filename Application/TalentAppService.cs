@@ -10,13 +10,13 @@ using Domain.Interfaces.Data;
 using Application.Interfaces;
 using System.Web;
 using System.IO;
+using AutoMapper.Extensions.ExpressionMapping;
 
 namespace Application
 {
     public class TalentAppService : GenericAppService, ITalentAppService
     {
         private readonly ITalentService _talentService;
-        private readonly string folderPath = System.Web.Hosting.HostingEnvironment.MapPath("~/Files");
         private readonly AutoMapper.IMapper _mapper;
         List<string> _errors = new List<string>();
 
@@ -51,21 +51,15 @@ namespace Application
         {
             try
             {
-                var users = _talentService.Get(t => t.Id == talent.Id);
-                if (users == null || users.Count() == 0)
-                {
-                    BeginTransaction();
-                    talent.Active = ((int)GenericStatusEnum.Inactive).ToString();
-                    _talentService.Update(talent);
-                    SaveChanges();
-                    Commit();
-                }
-                else
-                    _errors.Add(String.Format("O Talento {0} não pode ser desativado pois não foi encontrado na base de dados", talent.FullName));
+                BeginTransaction();
+                talent.Active = ((int)GenericStatusEnum.Inactive).ToString();
+                _talentService.Update(talent);
+                SaveChanges();
+                Commit();
             }
             catch (Exception e)
             {
-                _errors.Add(String.Format("Ocorreu um erro ao desativar o Perfil"));
+                _errors.Add(String.Format("Ocorreu um erro ao desativar o Talento"));
                 Rollback();
             }
             return _errors;
@@ -91,8 +85,8 @@ namespace Application
 
         public IEnumerable<TalentVM> Get(Expression<Func<TalentVM, bool>> filter = null, Expression<Func<IQueryable<TalentVM>, IOrderedQueryable<TalentVM>>> orderBy = null, string includeProperties = "")
         {
-            var filterNew = filter != null ? _mapper.Map<Expression<Func<TalentVM, bool>>, Expression<Func<Talent, bool>>>(filter) : null;
-            var orderByNew = orderBy != null ? _mapper.Map<Expression<Func<IQueryable<TalentVM>, IOrderedQueryable<TalentVM>>>
+            var filterNew = filter != null ? _mapper.MapExpression<Expression<Func<TalentVM, bool>>, Expression<Func<Talent, bool>>>(filter) : null;
+            var orderByNew = orderBy != null ? _mapper.MapExpression<Expression<Func<IQueryable<TalentVM>, IOrderedQueryable<TalentVM>>>
                 , Expression<Func<IQueryable<Talent>, IOrderedQueryable<Talent>>>>(orderBy) : null;
             return _mapper.Map<IEnumerable<Talent>, IEnumerable<TalentVM>>(_talentService.Get(filterNew, orderByNew, includeProperties));
         }
@@ -107,9 +101,40 @@ namespace Application
             return _mapper.Map<Talent, TalentVM>(_talentService.GetById(id));
         }
 
+        public TalentResumeVM GetResumeByTalentId(int id)
+        {
+            TalentResumeVM talentResume = new TalentResumeVM();
+            var talent = _talentService.Get(t => t.Id == id && t.Active == ((int)GenericStatusEnum.Active).ToString()).FirstOrDefault();
+            if (talent == null)
+            {
+                talentResume.Errors.Add("O Talento não foi encontrado na base de dados ou encontra-se inativo");
+                return talentResume;
+            }
+            string contentType;
+            switch (Path.GetExtension(talent.ResumeFileName).ToLower())
+            {
+                case ".pdf":
+                    contentType = "application/pdf";
+                    break;
+                case ".doc":
+                    contentType = "application/msword";
+                    break;
+                case ".docx":
+                    contentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+                    break;
+                default:
+                    contentType = "application/octet-stream";
+                    break;
+            }
+            talentResume.ContentType = contentType;
+            talentResume.FileName = talent.ResumeFileName;
+            talentResume.FileContent = talent.ResumeFileData;
+            return talentResume;
+        }
+
         public TalentDetailsVM GetDetailsById(int id)
         {
-            var talent = _talentService.GetById(id);
+            var talent = _talentService.Get(t => t.Id == id, null, "UserWhoUpdated").FirstOrDefault();
             TalentDetailsVM talentDetails = _mapper.Map<Talent, TalentDetailsVM>(talent);
             talentDetails.UpdatedBy = talent.UserWhoUpdated.Name;
             return talentDetails;
@@ -123,13 +148,13 @@ namespace Application
                 talent.Active = ((int)GenericStatusEnum.Active).ToString();
                 if (!IsFileValid(obj.Resume))
                     _errors.Add("O Arquivo de Currículo deve esta no formato PDF, DOC ou DOCX");
-                _errors = _talentService.Validate(talent);
+                _errors.AddRange(_talentService.Validate(talent));
                 if (_errors?.Count == 0)
                 {
-                    var uniqueFileName = AddNewFile(obj.Resume, nameof(talent.ResumeUniqueName), obj.Resume.FileName, talent.Id);
                     talent.ResumeFileName = obj.Resume.FileName;
-                    talent.ResumeUniqueName = uniqueFileName;
+                    AddOrUpdateNewFile(obj.Resume, talent);
                     talent.CreatedAt = DateTime.Now;
+                    talent.UpdatedAt = DateTime.Now;
                     BeginTransaction();
                     _talentService.Insert(talent);
                     SaveChanges();
@@ -153,34 +178,43 @@ namespace Application
             }
             return false;
         }
-        public List<string> Update(TalentVM obj)
+        public List<string> Update(TalentVM talentEdited)
         {
             try
             {
-                Talent talent = _mapper.Map<TalentVM, Talent>(obj);
+                bool fileHaschanged = false;
+                Talent talent = _mapper.Map<TalentVM, Talent>(talentEdited);
                 talent.Active = ((int)GenericStatusEnum.Active).ToString();
                 _errors = _talentService.Validate(talent);
                 if (_errors?.Count == 0)
                 {
-                    if (obj.Resume != null && obj.Resume.ContentLength > 0)
+                    if (talentEdited.Resume != null && talentEdited.Resume.ContentLength > 0)
                     {
-                        if (!IsFileValid(obj.Resume))
+                        if (!IsFileValid(talentEdited.Resume))
                         {
                             _errors.Add("O Arquivo de Currículo deve estar no formato PDF, DOC ou DOCX");
                         }
                         else
                         {
-                            RemoveOldFile(obj.ResumeUniqueName);
-                            var uniqueFileName = AddNewFile(obj.Resume, nameof(talent.ResumeUniqueName), obj.Resume.FileName, talent.Id);
-                            talent.ResumeFileName = obj.Resume.FileName;
-                            talent.ResumeUniqueName = uniqueFileName;
+                            AddOrUpdateNewFile(talentEdited.Resume, talent);
+                            fileHaschanged = true;
                         }
                     }
                     if (_errors?.Count == 0)
                     {
-                        talent.UpdatedAt = DateTime.Now;
                         BeginTransaction();
-                        _talentService.Update(talent);
+                        var talentToBeEdited = _talentService.GetByIdNoTracking(talentEdited.Id);
+                        talentToBeEdited.Email = talent.Email;
+                        talentToBeEdited.Cpf = talent.Cpf;
+                        talentToBeEdited.FullName = talent.FullName;
+                        talentToBeEdited.UpdatedAt = DateTime.Now;
+                        talentToBeEdited.UpdatedBy = talent.UpdatedBy;
+                        if (fileHaschanged)
+                        {
+                            talentToBeEdited.ResumeFileName = talentEdited.Resume.FileName;
+                            talentToBeEdited.ResumeFileData = talent.ResumeFileData;
+                        }
+                        _talentService.Update(talentToBeEdited);
                         SaveChanges();
                         Commit();
                     }
@@ -194,25 +228,10 @@ namespace Application
             return _errors;
         }
 
-        // Private method to remove the old file
-        private void RemoveOldFile(string uniqueFileName)
+        private void AddOrUpdateNewFile(HttpPostedFileBase file, Talent talent)
         {
-            var oldFilePath = Path.Combine(folderPath, uniqueFileName);
-            if (File.Exists(oldFilePath))
-                File.Delete(oldFilePath);
-        }
-
-        // Private method to add the new file
-        private string AddNewFile(HttpPostedFileBase file, string propertyName, string originalFileName, int talentId)
-        {
-            string uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(originalFileName);
-            while (!_talentService.IsUniqueField(propertyName, uniqueFileName, talentId))
-                uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(originalFileName);
-            if (!Directory.Exists(folderPath))
-                Directory.CreateDirectory(folderPath);
-            var filePath = Path.Combine(folderPath, uniqueFileName);
-            file.SaveAs(filePath);
-            return uniqueFileName;
+            talent.ResumeFileData = new byte[file.ContentLength];
+            file.InputStream.Read(talent.ResumeFileData, 0, file.ContentLength);
         }
     }
 }

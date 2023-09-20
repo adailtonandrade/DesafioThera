@@ -3,6 +3,8 @@ using System.ComponentModel.DataAnnotations;
 using Domain.Validations;
 using System;
 using Domain.Enum;
+using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace Application.ViewModels
 {
@@ -37,11 +39,14 @@ namespace Application.ViewModels
         public DateTime? UpdatedAt { get; set; }
 
         [Display(Name = "Atualizado Por")]
+        [JsonIgnore]
         public int UpdatedBy { get; set; }
-
+        [Display(Name = "Currículo")]
+        [JsonIgnore]
         public HttpPostedFileBase Resume { get; set; }
-        public string ResumeUniqueName { get; set; }
-        [Display(Name = "Curriculo Atual")]
+        [JsonIgnore]
+        public byte[] ResumeFileData { get; set; }
+        [Display(Name = "Currículo Atual")]
         public string ResumeFileName { get; set; }
         public string StatusName(string Active)
         {
@@ -49,6 +54,20 @@ namespace Application.ViewModels
                 return "Ativo";
             return "Inativo";
         }
+    }
+    public class TalentResumeVM
+    {
+        public TalentResumeVM()
+        {
+            Errors = new List<string>();
+        }
+        public string FileName { get; set; }
+
+        public byte[] FileContent { get; set; }
+
+        public string ContentType { get; set; }
+
+        public List<string> Errors { get; set; }
     }
 
     public class TalentDetailsVM : TalentVM

@@ -12,7 +12,7 @@ namespace Identity.Model
         public string Name { get; set; }
         public string NickName { get; set; }
         public string Active { get; set; }
-        public int IdProfile { get; set; }
+        public int ProfileId { get; set; }
         public DateTime CreatedAt { get; set; }
         public CustomRole Profile { get; set; }
 

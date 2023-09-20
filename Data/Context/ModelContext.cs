@@ -6,11 +6,6 @@ namespace Data.Context
 {
     public class ModelContext : DbContext
     {
-        public ModelContext(string nameOrConnectionString) : base(nameOrConnectionString)
-        {
-            Configuration.LazyLoadingEnabled = false;
-        }
-
         public ModelContext() : base("DBContext")
         {
             Configuration.LazyLoadingEnabled = false;

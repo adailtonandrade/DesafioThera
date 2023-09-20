@@ -12,7 +12,7 @@ namespace Service
     {
         private readonly ITalentRepository _talentRepository;
 
-        private List<string> _errors;
+        private List<string> _errors = new List<string>();
 
         public TalentService(ITalentRepository talentRepository) : base(talentRepository)
         {

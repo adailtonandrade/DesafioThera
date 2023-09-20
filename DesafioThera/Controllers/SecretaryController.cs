@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using DesafioThera.CustomAttribute;
 
 namespace DesafioThera.Controllers
 {
@@ -36,7 +37,7 @@ namespace DesafioThera.Controllers
         [ClaimsAuthorize(claimType: TypePermissionEnum.Secretaries, claimValue: ValuePermissionEnum.Consult)]
         public ActionResult Index()
         {
-            var secretaries = _userAppService.Get(u => u.ProfileId == (int)ProfileEnum.Secretary);
+            var secretaries = _userAppService.Get(u => u.ProfileId == (int)ProfileEnum.Secretary && u.Active == ((int)GenericStatusEnum.Active).ToString());
             return View(secretaries);
         }
 
@@ -68,7 +69,7 @@ namespace DesafioThera.Controllers
                     Cpf = Formatter.RemoveFormattingOfCnpjOrCpf(secretary.Cpf),
                     Name = secretary.Name.Trim(),
                     NickName = secretary.NickName.Trim(),
-                    IdProfile = secretary.ProfileId,
+                    ProfileId = secretary.ProfileId,
                     CreatedAt = DateTime.Now,
                     Active = activeStatus
                 };
@@ -122,7 +123,7 @@ namespace DesafioThera.Controllers
             return View(user);
         }
 
-        // POST: Secretary/Edit/5
+        // POST: Secretary/Edit
         [HttpPost]
         [ClaimsAuthorize(claimType: TypePermissionEnum.Secretaries, claimValue: ValuePermissionEnum.Update)]
         public ActionResult Edit(UserVM user)
@@ -176,7 +177,6 @@ namespace DesafioThera.Controllers
             {
                 this.Flash(Toastr.SUCCESS, String.Format("Secretária(o) Desativada(o) com sucesso"));
                 return RedirectToAction("Index");
-
             }
             ModelStateMessage.AddModelStateError(errors, string.Empty, ModelState);
             return RedirectToAction("Delete", new { secretaryId });

@@ -1,0 +1,21 @@
+﻿@{
+    ViewBag.Title = "Página não encontrada";
+}
+
+<link href="~/metronic/assets/pages/css/error.min.css" rel="stylesheet" />
+
+<div class="page-content-inner">
+    <div class="row">
+        <div class="col-md-12 page-404">
+            <div class="number font-green"> 404 </div>
+            <div class="details">
+                <h3>@ViewBag.Title</h3>
+                <p>
+                    Não foi possível encontrar a página solicitada
+                    <br />
+                    <a class="font-green" href="@Url.RouteUrl("Default", new { controller = "Home", action = "index"})"> @Html.DisplayName("Clique Aqui") </a> para retornar a página inicial
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

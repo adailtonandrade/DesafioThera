@@ -1,4 +1,5 @@
-﻿using Domain.Validations;
+﻿using Domain.Enum;
+using Domain.Validations;
 using System.ComponentModel.DataAnnotations;
 
 namespace Application.ViewModels
@@ -34,7 +35,13 @@ namespace Application.ViewModels
         [Required]
         [Display(Name = "Perfil")]
         public int ProfileId { get; set; }
-
+        [Display(Name = "Situação")]
         public string Active { get; set; }
+        public string StatusName(string Active)
+        {
+            if (Active == ((int)GenericStatusEnum.Active).ToString())
+                return "Ativo";
+            return "Inativo";
+        }
     }
 }

@@ -26,9 +26,8 @@ namespace Data.EntityConfig
                 .HasMaxLength(50)
                 .IsRequired();
 
-            Property(a => a.ResumeUniqueName)
-                .HasColumnName(nameof(Talent.ResumeUniqueName))
-                .HasMaxLength(200)
+            Property(a => a.ResumeFileData)
+                .HasColumnName(nameof(Talent.ResumeFileData))
                 .IsRequired();
 
             Property(a => a.Active)

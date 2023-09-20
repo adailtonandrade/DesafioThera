@@ -9,6 +9,7 @@ using Domain.Enum;
 using Domain.Interfaces.Data;
 using Application.Interfaces;
 using Domain.Interfaces.Repositories;
+using AutoMapper.Extensions.ExpressionMapping;
 
 namespace Application
 {
@@ -91,8 +92,8 @@ namespace Application
 
         public IEnumerable<ProfileVM> Get(Expression<Func<ProfileVM, bool>> filter = null, Expression<Func<IQueryable<ProfileVM>, IOrderedQueryable<ProfileVM>>> orderBy = null, string includeProperties = "")
         {
-            var filterNew = filter != null ? _mapper.Map<Expression<Func<ProfileVM, bool>>, Expression<Func<Profile, bool>>>(filter) : null;
-            var orderByNew = orderBy != null ? _mapper.Map<Expression<Func<IQueryable<ProfileVM>, IOrderedQueryable<ProfileVM>>>
+            var filterNew = filter != null ? _mapper.MapExpression<Expression<Func<ProfileVM, bool>>, Expression<Func<Profile, bool>>>(filter) : null;
+            var orderByNew = orderBy != null ? _mapper.MapExpression<Expression<Func<IQueryable<ProfileVM>, IOrderedQueryable<ProfileVM>>>
                 , Expression<Func<IQueryable<Profile>, IOrderedQueryable<Profile>>>>(orderBy) : null;
             return _mapper.Map<IEnumerable<Profile>, IEnumerable<ProfileVM>>(_profileService.Get(filterNew, orderByNew, includeProperties));
         }
@@ -130,8 +131,8 @@ namespace Application
                             {
                                 ProfilePermission newAccess = new ProfilePermission()
                                 {
-                                    IdPermission = item,
-                                    IdProfile = profile.Id
+                                    PermissionId = item,
+                                    ProfileId = profile.Id
                                 };
                                 _profilePermissionRepository.Insert(newAccess);
                                 accessInserted.Add(newAccess);
@@ -163,10 +164,10 @@ namespace Application
                     _profileService.Update(profile);
                     if (_errors?.Count() == 0)
                     {
-                        var IdPermissions = _profileService.GetPermissions(profile.Id).Select(p => p.Id).ToList();
-                        foreach (var item in IdPermissions)
+                        var permissionIds = _profileService.GetPermissions(profile.Id).Select(p => p.Id).ToList();
+                        foreach (var item in permissionIds)
                         {
-                            ProfilePermission deleteAccess = new ProfilePermission() { IdPermission = item, IdProfile = profile.Id };
+                            ProfilePermission deleteAccess = new ProfilePermission() { PermissionId = item, ProfileId = profile.Id };
                             if (obj.SelectedPermissionIdList != null)
                             {
                                 if (!obj.SelectedPermissionIdList.Contains(item))
@@ -183,9 +184,9 @@ namespace Application
                         {
                             foreach (var item in obj.SelectedPermissionIdList)
                             {
-                                if (!IdPermissions.Contains(item))
+                                if (!permissionIds.Contains(item))
                                 {
-                                    ProfilePermission newAccess = new ProfilePermission() { IdPermission = item, IdProfile = profile.Id };
+                                    ProfilePermission newAccess = new ProfilePermission() { PermissionId = item, ProfileId = profile.Id };
                                     _profilePermissionRepository.Insert(newAccess);
                                     accessInserted.Add(newAccess);
                                 }

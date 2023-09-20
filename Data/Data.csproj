@@ -64,9 +64,9 @@
     <Compile Include="EntityConfig\ProfilePermissionConfiguration.cs" />
     <Compile Include="EntityConfig\UserConfiguration.cs" />
     <Compile Include="EntityConfig\UserLoginConfiguration.cs" />
-    <Compile Include="Migrations\202309181728531_inicial.cs" />
-    <Compile Include="Migrations\202309181728531_inicial.designer.cs">
-      <DependentUpon>202309181728531_inicial.cs</DependentUpon>
+    <Compile Include="Migrations\202309192318081_initial.cs" />
+    <Compile Include="Migrations\202309192318081_initial.designer.cs">
+      <DependentUpon>202309192318081_initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -74,6 +74,7 @@
     <Compile Include="Repositories\ProfilePermissionRepository.cs" />
     <Compile Include="Repositories\GenericRepository.cs" />
     <Compile Include="Repositories\ProfileRepository.cs" />
+    <Compile Include="Repositories\TalentRepository.cs" />
     <Compile Include="Repositories\UserRepository.cs" />
     <Compile Include="UnitOfWork.cs" />
   </ItemGroup>
@@ -88,8 +89,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202309181728531_inicial.resx">
-      <DependentUpon>202309181728531_inicial.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202309192318081_initial.resx">
+      <DependentUpon>202309192318081_initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -12,6 +12,8 @@ using Domain.Util;
 using System;
 using System.Collections.Generic;
 using RedWillow.MvcToastrFlash;
+using Application.Interfaces;
+using System.Linq;
 
 namespace DesafioThera.Controllers
 {
@@ -24,15 +26,17 @@ namespace DesafioThera.Controllers
         private string activeStatus = ((int)GenericStatusEnum.Active).ToString();
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private readonly IProfileAppService _profileAppService;
 
         public AccountController()
         {
         }
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager, IProfileAppService profileAppService)
         {
             UserManager = userManager;
             SignInManager = signInManager;
+            _profileAppService = profileAppService;
             defaultStartPage = new { Controller = "Home", Action = "Index" };
         }
 
@@ -147,7 +151,9 @@ namespace DesafioThera.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
-            return View();
+            RegisterVM register = new RegisterVM();
+            FillProfileList(register);
+            return View(register);
         }
 
         //
@@ -166,7 +172,7 @@ namespace DesafioThera.Controllers
                     Cpf = Formatter.RemoveFormattingOfCnpjOrCpf(model.Cpf),
                     Name = model.Name.Trim(),
                     NickName = model.NickName.Trim(),
-                    IdProfile = model.ProfileId,
+                    ProfileId = model.ProfileId,
                     CreatedAt = DateTime.Now,
                     Active = activeStatus
                 };
@@ -180,7 +186,10 @@ namespace DesafioThera.Controllers
                         MailMessages mailMessage = new MailMessages(System.Web.HttpContext.Current.Server.MapPath("~/App_Data/Templates/MailTemplate.txt"));
                         string body = mailMessage.RegisterMessage(user.Name, passwd, route);
                         await _userManager.SendEmailAsync(user.Id, "Cadastro de Usuário", body);
-                        this.Flash(Toastr.SUCCESS, "Usuário cadastrado com sucesso, verifique o e-mail com a senha para realizar o primeiro acesso");
+                        ViewBag.Password = passwd;
+                        this.Flash(
+                            Toastr.SUCCESS,
+                            "Usuário cadastrado com sucesso, verifique o e-mail com a senha para realizar o primeiro acesso, caso o e-mail não chegue, aqui está a senha gerada: " + passwd);
                     }
                     else
                     {
@@ -200,6 +209,7 @@ namespace DesafioThera.Controllers
                     }
                 }
             }
+            FillProfileList(model);
             return View(model);
         }
 
@@ -433,7 +443,10 @@ namespace DesafioThera.Controllers
         {
             return View();
         }
-
+        private void FillProfileList(RegisterVM user)
+        {
+            user.ProfileList = _profileAppService.Get(p => p.Active.Equals(activeStatus)).OrderBy(p => p.Name).ToList();
+        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)

@@ -20,6 +20,7 @@ using Service;
 using System.Web;
 using Data.Repositories;
 using Domain.Interfaces.Repositories;
+using System.Web.Mvc;
 
 namespace CrossCutting.IoC
 {
@@ -72,6 +73,7 @@ namespace CrossCutting.IoC
 
             #region Repository
             kernel.Bind<IProfileRepository>().To<ProfileRepository>();
+            kernel.Bind<ITalentRepository>().To<TalentRepository>();
             kernel.Bind(typeof(IGenericRepository<>)).To(typeof(GenericRepository<>));
             kernel.Bind(typeof(IComposedKeyRepository<>)).To(typeof(ComposedKeyRepository<>));
             kernel.Bind<IUserRepository>().To<UserRepository>();
@@ -81,6 +83,7 @@ namespace CrossCutting.IoC
             Bind<IUnitOfWork>().To<UnitOfWork>();
             Bind<ModelContext>().ToSelf().InCallScope();
             #endregion
+            Unbind<ModelValidatorProvider>();
         }
     }
 }

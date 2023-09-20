@@ -1,0 +1,22 @@
+﻿@model System.Web.Mvc.HandleErrorInfo
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    ViewBag.Title = "Erro interno no servidor";
+}
+
+<link href="~/metronic/assets/pages/css/error.min.css" rel="stylesheet" />
+<div class="row">
+    <div class="col-md-12 page-500">
+        <div class="number font-green"> 500 </div>
+        <div class="details">
+            <h3>@ViewBag.Title</h3>
+            <p>
+                Ocorreu um erro interno no servidor! Entre em contato com o administrador do ambiente
+                <br>
+                <a class="font-green" href="@Url.RouteUrl("Default", new { controller = "Home", action = "index"})"> @Html.DisplayName("Clique aqui") </a> para retornar a página inicial
+            </p>
+        </div>
+    </div>
+</div>
