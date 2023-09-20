@@ -17,62 +17,61 @@ using System.Web.Http;
 
 namespace DesafioApi.Controllers
 {
-    [RoutePrefix("api/secretaries")]
-    public class SecretaryController : ApiController
+    [RoutePrefix("api/administrators")]
+    public class AdministratorController : ApiController
     {
         List<string> errors = new List<string>();
         private string activeStatus = ((int)GenericStatusEnum.Active).ToString();
         private readonly IUserAppService _userAppService;
         private ApplicationUserManager _userManager;
 
-        public SecretaryController(ApplicationUserManager userManager, IUserAppService userAppService)
+        public AdministratorController(ApplicationUserManager userManager, IUserAppService userAppService)
         {
             _userManager = userManager;
             _userAppService = userAppService;
         }
-
-        // GET: api/secretaries
+        // GET: api/Administrator
         [Route("")]
-        [ClaimsAuthorization(TypePermissionEnum.Secretaries, ValuePermissionEnum.Consult)]
+        [ClaimsAuthorization(TypePermissionEnum.Administrators, ValuePermissionEnum.Consult)]
         public IHttpActionResult Get()
         {
-            var secretaries = _userAppService.GetAll();
-            return Ok(new ResponseViewModel<IEnumerable<UserVM>>() { Message = "Lista de Secretárias", Content = secretaries });
+            var administrators = _userAppService.GetAll();
+            return Ok(new ResponseViewModel<IEnumerable<UserVM>>() { Message = "Lista de Administradores", Content = administrators });
         }
 
-        // GET: api/secretaries/5
+        // GET: api/Administrator/5
         [Route("{id:int}")]
-        [ClaimsAuthorization(TypePermissionEnum.Secretaries, ValuePermissionEnum.Consult)]
+        [ClaimsAuthorization(TypePermissionEnum.Administrators, ValuePermissionEnum.Consult)]
         public IHttpActionResult Get(int id)
         {
-            var secretary = _userAppService.GetById(id);
-            if (secretary != null)
-                return Ok(new ResponseViewModel<UserVM>() { Content = secretary });
+            var administrator = _userAppService.GetById(id);
+            if (administrator != null)
+                return Ok(new ResponseViewModel<UserVM>() { Content = administrator });
             return NotFound();
         }
 
-        // POST: api/secretaries
+        // POST: api/Administrator
         [Route("")]
-        //[ClaimsAuthorization(TypePermissionEnum.Secretaries, ValuePermissionEnum.Create)]
-        public async Task<IHttpActionResult> Post([FromBody] RegisterVM secretary)
+        [ClaimsAuthorization(TypePermissionEnum.Administrators, ValuePermissionEnum.Create)]
+        public async Task<IHttpActionResult> Post([FromBody] RegisterVM administrator)
         {
             if (!ModelState.IsValid)
             {
                 errors.AddRange(ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList());
                 return Content(HttpStatusCode.BadRequest, new ResponseViewModel<RegisterVM>()
                 {
-                    Message = "Falha ao cadastrar secretária(o)",
+                    Message = "Falha ao cadastrar administrador(a)",
                     Errors = errors,
-                    Content = secretary
+                    Content = administrator
                 });
             }
-            if (secretary != null && secretary.ProfileId != (int)ProfileEnum.Secretary)
+            if (administrator != null && administrator.ProfileId != (int)ProfileEnum.Secretary)
             {
-                errors.Add("O ProfileId informado não corresponde ao de secretária(o)");
+                errors.Add("O ProfileId informado não corresponde ao de administrador(a)");
                 return Content(HttpStatusCode.BadRequest, new ResponseViewModel<RegisterVM>()
                 {
-                    Message = "Falha ao cadastrar secretária(o)",
-                    Content = secretary,
+                    Message = "Falha ao cadastrar administrador(a)",
+                    Content = administrator,
                     Errors = errors
                 });
             }
@@ -80,12 +79,12 @@ namespace DesafioApi.Controllers
             {
                 var user = new ApplicationUser
                 {
-                    UserName = secretary.Email.Trim(),
-                    Email = secretary.Email.Trim(),
-                    Cpf = Formatter.RemoveFormattingOfCnpjOrCpf(secretary.Cpf),
-                    Name = secretary.Name.Trim(),
-                    NickName = secretary.NickName.Trim(),
-                    ProfileId = secretary.ProfileId,
+                    UserName = administrator.Email.Trim(),
+                    Email = administrator.Email.Trim(),
+                    Cpf = Formatter.RemoveFormattingOfCnpjOrCpf(administrator.Cpf),
+                    Name = administrator.Name.Trim(),
+                    NickName = administrator.NickName.Trim(),
+                    ProfileId = administrator.ProfileId,
                     CreatedAt = DateTime.Now,
                     Active = activeStatus
                 };
@@ -98,21 +97,21 @@ namespace DesafioApi.Controllers
                         errors.Add(ApplicationUserManager.dicErrors[key]);
                         return Content(HttpStatusCode.BadRequest, new ResponseViewModel<RegisterVM>()
                         {
-                            Message = "Falha ao cadastrar secretária(o)",
+                            Message = "Falha ao cadastrar administrador(a)",
                             Errors = errors,
-                            Content = secretary
+                            Content = administrator
                         });
                     }
                 }
-                secretary.Id = user.Id;
+                administrator.Id = user.Id;
                 var route = HttpContext.Current.Request.Url.Scheme + "://" + HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath.TrimEnd('/') + "/";
                 MailMessages mailMessage = new MailMessages(HttpContext.Current.Server.MapPath("~/App_Data/Templates/MailTemplate.txt"));
                 string body = mailMessage.RegisterMessage(user.Name, passwd, route);
-                await _userManager.SendEmailAsync(user.Id, "Cadastro de Secretária(o)", body);
+                await _userManager.SendEmailAsync(user.Id, "Cadastro de Administrador(a)", body);
                 return Content(HttpStatusCode.Created, new ResponseViewModel<RegisterVM>()
                 {
-                    Message = "Secretário(a) cadastrada(o) com sucesso, verifique o e-mail com a senha para realizar o primeiro acesso, caso não chegue, aqui esta a senha que foi gerada para você: " + passwd,
-                    Content = secretary
+                    Message = "Administrador(a) cadastrado(a) com sucesso, verifique o e-mail com a senha para realizar o primeiro acesso, caso não chegue, aqui esta a senha que foi gerada para você: " + passwd,
+                    Content = administrator
                 });
             }
             catch (Exception e)
@@ -121,19 +120,19 @@ namespace DesafioApi.Controllers
             }
         }
 
-        // PUT: api/Secretary/5
+        // PUT: api/Administrator/5
         [Route("{id:int}")]
-        [ClaimsAuthorization(TypePermissionEnum.Secretaries, ValuePermissionEnum.Update)]
-        public IHttpActionResult Put(int id, [FromBody] UserVM secretary)
+        [ClaimsAuthorization(TypePermissionEnum.Administrators, ValuePermissionEnum.Update)]
+        public IHttpActionResult Put(int id, [FromBody] UserVM administrator)
         {
             if (id == 0)
             {
                 errors.Add("Informe um ID");
                 return Content(HttpStatusCode.BadRequest, new ResponseViewModel<UserVM>()
                 {
-                    Message = "Falha ao editar secretária(o)",
+                    Message = "Falha ao editar administrador(a)",
                     Errors = errors,
-                    Content = secretary
+                    Content = administrator
                 });
             }
             if (!ModelState.IsValid)
@@ -144,29 +143,29 @@ namespace DesafioApi.Controllers
                         .ToList());
                 return Content(HttpStatusCode.BadRequest, new ResponseViewModel<UserVM>()
                 {
-                    Message = "Falha ao editar secretária(o)",
+                    Message = "Falha ao editar administrador(a)",
                     Errors = errors,
-                    Content = secretary
+                    Content = administrator
                 });
             }
-            secretary.Id = id;
-            errors = _userAppService.Update(secretary);
+            administrator.Id = id;
+            errors = _userAppService.Update(administrator);
             if (errors.Count == 0)
             {
-                return Ok(new ResponseViewModel<UserVM>() { Message = "Secretária(o) alterado(o) com sucesso", Content = secretary });
+                return Ok(new ResponseViewModel<UserVM>() { Message = "Administrador(a) alterado(o) com sucesso", Content = administrator });
             }
             errors.AddRange(ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList());
             return Content(HttpStatusCode.BadRequest, new ResponseViewModel<UserVM>()
             {
-                Message = "Falha ao editar secretária(o)",
+                Message = "Falha ao editar administrador(a)",
                 Errors = errors,
-                Content = secretary
+                Content = administrator
             });
         }
 
-        // DELETE: api/Secretary/5
+        // DELETE: api/Administrator/5
         [Route("{id:int}")]
-        [ClaimsAuthorization(TypePermissionEnum.Secretaries, ValuePermissionEnum.Deactivate)]
+        [ClaimsAuthorization(TypePermissionEnum.Administrators, ValuePermissionEnum.Deactivate)]
         public IHttpActionResult Delete(int id)
         {
             if (id == 0)
@@ -174,19 +173,19 @@ namespace DesafioApi.Controllers
                 errors.Add("Informe um ID");
                 return Content(HttpStatusCode.BadRequest, new ResponseViewModel<UserVM>()
                 {
-                    Message = "Falha ao desativar secretária(o)",
+                    Message = "Falha ao desativar administrador(a)",
                     Errors = errors
                 });
             }
             errors = _userAppService.Delete(id);
             if (errors.Count == 0)
             {
-                return Ok(new ResponseViewModel<string>() { Message = "A(O) secretária(o) de ID + " + id + " foi desativada(o) com sucesso" });
+                return Ok(new ResponseViewModel<string>() { Message = "O(A) administrador(a) de ID + " + id + " foi desativado(a) com sucesso" });
             }
             errors.AddRange(ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList());
             return Content(HttpStatusCode.BadRequest, new ResponseViewModel<string>()
             {
-                Message = "Falha ao desativar secretária(o)",
+                Message = "Falha ao desativar administrador(a)",
             });
         }
     }

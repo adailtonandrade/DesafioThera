@@ -126,6 +126,7 @@ namespace DesafioApi.App_Start
             kernel.Bind(typeof(IGenericRepository<>)).To(typeof(GenericRepository<>));
             kernel.Bind(typeof(IComposedKeyRepository<>)).To(typeof(ComposedKeyRepository<>));
             kernel.Bind<IUserRepository>().To<UserRepository>();
+            kernel.Bind<ITalentRepository>().To<TalentRepository>();
             #endregion
 
             #region Universal

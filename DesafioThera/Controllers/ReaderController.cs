@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using DesafioThera.CustomAttribute;
 
 namespace DesafioThera.Controllers
 {
@@ -40,7 +41,6 @@ namespace DesafioThera.Controllers
             return View(readers);
         }
 
-        //
         // GET: Reader/Create
         [ClaimsAuthorize(claimType: TypePermissionEnum.Readers, claimValue: ValuePermissionEnum.Create)]
         public ActionResult Create()
@@ -50,8 +50,8 @@ namespace DesafioThera.Controllers
             return View(reader);
         }
 
-        //
-        // POST: /Reader/Create
+        
+        // POST: Reader/Create
         [HttpPost]
         [ClaimsAuthorize(claimType: TypePermissionEnum.Readers, claimValue: ValuePermissionEnum.Create)]
         [ValidateAntiForgeryToken]
@@ -107,6 +107,7 @@ namespace DesafioThera.Controllers
             return View(reader);
         }
 
+        // GET: Reader/Edit/5
         [ClaimsAuthorize(claimType: TypePermissionEnum.Readers, claimValue: ValuePermissionEnum.Update)]
         public ActionResult Edit(int id)
         {
@@ -123,6 +124,7 @@ namespace DesafioThera.Controllers
             return View(reader);
         }
 
+        // POST: Reader/Edit
         [ClaimsAuthorize(claimType: TypePermissionEnum.Readers, claimValue: ValuePermissionEnum.Update)]
         [HttpPost]
         public ActionResult Edit(UserVM reader)
@@ -143,33 +145,43 @@ namespace DesafioThera.Controllers
 
         }
 
-        [ClaimsAuthorize(claimType: TypePermissionEnum.Readers, claimValue: ValuePermissionEnum.Consult)]
         // GET: Reader/Details/5
+        [ClaimsAuthorize(claimType: TypePermissionEnum.Readers, claimValue: ValuePermissionEnum.Consult)]
         public ActionResult Details(int id)
         {
-            return View();
+            var reader = _userAppService.GetById(id);
+            if (reader != null && reader.ProfileId != (int)ProfileEnum.Reader)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            return View(reader);
         }
 
         // GET: Reader/Delete/5
-        public ActionResult Delete(int id)
+        [ClaimsAuthorize(claimType: TypePermissionEnum.Readers, claimValue: ValuePermissionEnum.Deactivate)]
+        public ActionResult Delete(int readerId)
         {
-            return View();
+            var reader = _userAppService.GetById(readerId);
+            if (reader != null && reader.ProfileId != (int)ProfileEnum.Reader)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            return View(reader);
         }
 
         // POST: Reader/Delete/5
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+        [HttpPost, ActionName("Delete")]
+        [ClaimsAuthorize(claimType: TypePermissionEnum.Readers, claimValue: ValuePermissionEnum.Deactivate)]
+        public ActionResult DeleteConfirmed(int readerId)
         {
-            try
+            errors = _userAppService.Delete(readerId);
+            if (errors.Count == 0)
             {
-                // TODO: Add delete logic here
-
+                this.Flash(Toastr.SUCCESS, String.Format("Leitor(a) Desativado(a) com sucesso"));
                 return RedirectToAction("Index");
             }
-            catch
-            {
-                return View();
-            }
+            ModelStateMessage.AddModelStateError(errors, string.Empty, ModelState);
+            return RedirectToAction("Delete", new { readerId });
         }
     }
 }

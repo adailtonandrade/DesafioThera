@@ -11,9 +11,9 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using DesafioThera.CustomAttribute;
 
 namespace DesafioThera.Controllers
 {
@@ -32,14 +32,14 @@ namespace DesafioThera.Controllers
             defaultBackPage = new { Controller = "Administrator", Action = "Index" };
         }
 
-        [ClaimsAuthorize(claimType: TypePermissionEnum.Administrators, claimValue: ValuePermissionEnum.Consult)]
         // GET: Administrator
+        [ClaimsAuthorize(claimType: TypePermissionEnum.Administrators, claimValue: ValuePermissionEnum.Consult)]
         public ActionResult Index()
         {
             var administrators = _userAppService.Get(u => u.ProfileId == (int)ProfileEnum.Administrator && u.Active == ((int)GenericStatusEnum.Active).ToString());
             return View(administrators);
         }
-        //
+        
         // GET: Administrator/Create
         [ClaimsAuthorize(claimType: TypePermissionEnum.Administrators, claimValue: ValuePermissionEnum.Create)]
         public ActionResult Create()
@@ -49,11 +49,10 @@ namespace DesafioThera.Controllers
             return View(administrator);
         }
 
-        //
         // POST: Administrator/Create
         [HttpPost]
-        [ClaimsAuthorize(claimType: TypePermissionEnum.Administrators, claimValue: ValuePermissionEnum.Create)]
         [ValidateAntiForgeryToken]
+        [ClaimsAuthorize(claimType: TypePermissionEnum.Administrators, claimValue: ValuePermissionEnum.Create)]
         public async Task<ActionResult> Create(RegisterVM administrator)
         {
             if (ModelState.IsValid)
@@ -106,10 +105,10 @@ namespace DesafioThera.Controllers
             return View(administrator);
         }
 
+        // GET: Administrator/Edit/5
         [ClaimsAuthorize(claimType: TypePermissionEnum.Administrators, claimValue: ValuePermissionEnum.Update)]
         public ActionResult Edit(int id)
         {
-            Response.Cache.SetCacheability(HttpCacheability.NoCache);
             UserVM administrator = _userAppService.GetById(id);
             if (administrator == null)
             {
@@ -122,8 +121,9 @@ namespace DesafioThera.Controllers
             return View(administrator);
         }
 
-        [ClaimsAuthorize(claimType: TypePermissionEnum.Administrators, claimValue: ValuePermissionEnum.Update)]
+        // POST: Administrator/Edit
         [HttpPost]
+        [ClaimsAuthorize(claimType: TypePermissionEnum.Administrators, claimValue: ValuePermissionEnum.Update)]
         public ActionResult Edit(UserVM administrator)
         {
             if (!ModelState.IsValid)
@@ -141,34 +141,43 @@ namespace DesafioThera.Controllers
 
         }
 
+        // GET: Secretary/Details/5
         [ClaimsAuthorize(claimType: TypePermissionEnum.Administrators, claimValue: ValuePermissionEnum.Consult)]
-        // GET: Administrator/Details/5
         public ActionResult Details(int id)
         {
-            return View();
-        }
-
-        [ClaimsAuthorize(claimType: TypePermissionEnum.Administrators, claimValue: ValuePermissionEnum.Deactivate)]
-        // GET: Administrator/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: Administrator/Delete/5
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
-        {
-            try
+            var administrator = _userAppService.GetById(id);
+            if (administrator != null && administrator.ProfileId != (int)ProfileEnum.Administrator)
             {
-                // TODO: Add delete logic here
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            return View(administrator);
+        }
 
+        // GET: Secretary/Delete/5
+        [ClaimsAuthorize(claimType: TypePermissionEnum.Administrators, claimValue: ValuePermissionEnum.Deactivate)]
+        public ActionResult Delete(int administratorId)
+        {
+            var administrator = _userAppService.GetById(administratorId);
+            if (administrator != null && administrator.ProfileId != (int)ProfileEnum.Administrator)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            return View(administrator);
+        }
+
+        // POST: Secretary/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ClaimsAuthorize(claimType: TypePermissionEnum.Administrators, claimValue: ValuePermissionEnum.Deactivate)]
+        public ActionResult DeleteConfirmed(int administratorId)
+        {
+            errors = _userAppService.Delete(administratorId);
+            if (errors.Count == 0)
+            {
+                this.Flash(Toastr.SUCCESS, String.Format("Administrador(a) Desativado(a) com sucesso"));
                 return RedirectToAction("Index");
             }
-            catch
-            {
-                return View();
-            }
+            ModelStateMessage.AddModelStateError(errors, string.Empty, ModelState);
+            return RedirectToAction("Delete", new { administratorId });
         }
     }
 }

@@ -8,6 +8,7 @@ namespace Identity.ViewModels
 {
     public class RegisterVM
     {
+        public int Id { get; set; }
         [Required]
         [EmailAddress(ErrorMessage = "O campo E-mail não está em um formato válido")]
         [StringLength(50, ErrorMessage = "O limite máximo de caracteres no campo {0} é de {1}")]

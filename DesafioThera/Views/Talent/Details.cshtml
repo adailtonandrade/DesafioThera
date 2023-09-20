@@ -65,7 +65,7 @@
 
         <dd>
             @Html.DisplayFor(model => model.ResumeFileName)
-            @Html.ActionLink("Baixar Curriculo", "DownloadResume", "Talent", new { resumeUniqueName = Model.ResumeUniqueName, resumeFileName = Model.ResumeFileName }, null)
+            @Html.ActionLink("Baixar Curriculo", "DownloadResume", "Talent", new { talentId = Model.Id }, null)
         </dd>
     </dl>
 </div>

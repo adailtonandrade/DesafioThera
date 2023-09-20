@@ -76,7 +76,7 @@
                         FullName = c.String(nullable: false, maxLength: 50),
                         Email = c.String(nullable: false, maxLength: 50),
                         Cpf = c.String(),
-                        ResumeUniqueName = c.String(nullable: false, maxLength: 200),
+                        ResumeFileData = c.Binary(nullable: false),
                         ResumeFileName = c.String(nullable: false, maxLength: 50),
                         Active = c.String(nullable: false, maxLength: 1, fixedLength: true, unicode: false),
                         CreatedAt = c.DateTime(nullable: false),

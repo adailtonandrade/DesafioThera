@@ -17,7 +17,6 @@ namespace Application
     public class TalentAppService : GenericAppService, ITalentAppService
     {
         private readonly ITalentService _talentService;
-        private readonly string folderPath = System.Web.Hosting.HostingEnvironment.MapPath("~/Files");
         private readonly AutoMapper.IMapper _mapper;
         List<string> _errors = new List<string>();
 
@@ -127,9 +126,8 @@ namespace Application
                 _errors = _talentService.Validate(talent);
                 if (_errors?.Count == 0)
                 {
-                    var uniqueFileName = AddNewFile(obj.Resume, nameof(talent.ResumeUniqueName), obj.Resume.FileName, talent.Id);
                     talent.ResumeFileName = obj.Resume.FileName;
-                    talent.ResumeUniqueName = uniqueFileName;
+                    AddOrUpdateNewFile(obj.Resume, talent);
                     talent.CreatedAt = DateTime.Now;
                     talent.UpdatedAt = DateTime.Now;
                     BeginTransaction();
@@ -155,34 +153,43 @@ namespace Application
             }
             return false;
         }
-        public List<string> Update(TalentVM obj)
+        public List<string> Update(TalentVM talentEdited)
         {
             try
             {
-                Talent talent = _mapper.Map<TalentVM, Talent>(obj);
+                bool fileHaschanged = false;
+                Talent talent = _mapper.Map<TalentVM, Talent>(talentEdited);
                 talent.Active = ((int)GenericStatusEnum.Active).ToString();
                 _errors = _talentService.Validate(talent);
                 if (_errors?.Count == 0)
                 {
-                    if (obj.Resume != null && obj.Resume.ContentLength > 0)
+                    if (talentEdited.Resume != null && talentEdited.Resume.ContentLength > 0)
                     {
-                        if (!IsFileValid(obj.Resume))
+                        if (!IsFileValid(talentEdited.Resume))
                         {
                             _errors.Add("O Arquivo de Currículo deve estar no formato PDF, DOC ou DOCX");
                         }
                         else
                         {
-                            RemoveOldFile(obj.ResumeUniqueName);
-                            var uniqueFileName = AddNewFile(obj.Resume, nameof(talent.ResumeUniqueName), obj.Resume.FileName, talent.Id);
-                            talent.ResumeFileName = obj.Resume.FileName;
-                            talent.ResumeUniqueName = uniqueFileName;
+                            AddOrUpdateNewFile(talentEdited.Resume, talent);
+                            fileHaschanged = true;
                         }
                     }
                     if (_errors?.Count == 0)
                     {
-                        talent.UpdatedAt = DateTime.Now;
                         BeginTransaction();
-                        _talentService.Update(talent);
+                        var talentToBeEdited = _talentService.GetByIdNoTracking(talentEdited.Id);
+                        talentToBeEdited.Email = talent.Email;
+                        talentToBeEdited.Cpf = talent.Cpf;
+                        talentToBeEdited.FullName = talent.FullName;
+                        talentToBeEdited.UpdatedAt = DateTime.Now;
+                        talentToBeEdited.UpdatedBy = talent.UpdatedBy;
+                        if (fileHaschanged)
+                        {
+                            talentToBeEdited.ResumeFileName = talentEdited.Resume.FileName;
+                            talentToBeEdited.ResumeFileData = talent.ResumeFileData;
+                        }
+                        _talentService.Update(talentToBeEdited);
                         SaveChanges();
                         Commit();
                     }
@@ -196,25 +203,10 @@ namespace Application
             return _errors;
         }
 
-        // Private method to remove the old file
-        private void RemoveOldFile(string uniqueFileName)
+        private void AddOrUpdateNewFile(HttpPostedFileBase file, Talent talent)
         {
-            var oldFilePath = Path.Combine(folderPath, uniqueFileName);
-            if (File.Exists(oldFilePath))
-                File.Delete(oldFilePath);
-        }
-
-        // Private method to add the new file
-        private string AddNewFile(HttpPostedFileBase file, string propertyName, string originalFileName, int talentId)
-        {
-            string uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(originalFileName);
-            while (!_talentService.IsUniqueField(propertyName, uniqueFileName, talentId))
-                uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(originalFileName);
-            if (!Directory.Exists(folderPath))
-                Directory.CreateDirectory(folderPath);
-            var filePath = Path.Combine(folderPath, uniqueFileName);
-            file.SaveAs(filePath);
-            return uniqueFileName;
+            talent.ResumeFileData = new byte[file.ContentLength];
+            file.InputStream.Read(talent.ResumeFileData, 0, file.ContentLength);
         }
     }
 }

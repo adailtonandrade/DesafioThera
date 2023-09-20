@@ -6,7 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 
-namespace DesafioThera.Controllers
+namespace DesafioThera.CustomAttribute
 {
     public class ClaimsAuthorizeAttribute : AuthorizeAttribute
     {
@@ -26,9 +26,7 @@ namespace DesafioThera.Controllers
             string claimValue = PropertyDescription.GetEnumDescription(_claimValue);
             var claim = identity.Claims.FirstOrDefault(c => c.Type == claimType && c.Value == claimValue);
             if (claim != null)
-            {
                 return true;
-            }
             return false;
         }
         protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)

@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using DesafioThera.CustomAttribute;
 
 namespace DesafioThera.Controllers
 {
@@ -122,7 +123,7 @@ namespace DesafioThera.Controllers
             return View(user);
         }
 
-        // POST: Secretary/Edit/5
+        // POST: Secretary/Edit
         [HttpPost]
         [ClaimsAuthorize(claimType: TypePermissionEnum.Secretaries, claimValue: ValuePermissionEnum.Update)]
         public ActionResult Edit(UserVM user)
@@ -176,7 +177,6 @@ namespace DesafioThera.Controllers
             {
                 this.Flash(Toastr.SUCCESS, String.Format("Secretária(o) Desativada(o) com sucesso"));
                 return RedirectToAction("Index");
-
             }
             ModelStateMessage.AddModelStateError(errors, string.Empty, ModelState);
             return RedirectToAction("Delete", new { secretaryId });

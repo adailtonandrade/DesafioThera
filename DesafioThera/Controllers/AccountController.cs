@@ -186,7 +186,10 @@ namespace DesafioThera.Controllers
                         MailMessages mailMessage = new MailMessages(System.Web.HttpContext.Current.Server.MapPath("~/App_Data/Templates/MailTemplate.txt"));
                         string body = mailMessage.RegisterMessage(user.Name, passwd, route);
                         await _userManager.SendEmailAsync(user.Id, "Cadastro de Usuário", body);
-                        this.Flash(Toastr.SUCCESS, "Usuário cadastrado com sucesso, verifique o e-mail com a senha para realizar o primeiro acesso");
+                        ViewBag.Password = passwd;
+                        this.Flash(
+                            Toastr.SUCCESS,
+                            "Usuário cadastrado com sucesso, verifique o e-mail com a senha para realizar o primeiro acesso, caso o e-mail não chegue, aqui está a senha gerada: " + passwd);
                     }
                     else
                     {

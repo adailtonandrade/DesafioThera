@@ -9,6 +9,7 @@ using System;
 using Domain.Enum;
 using System.Net;
 using RedWillow.MvcToastrFlash;
+using DesafioThera.CustomAttribute;
 
 namespace DesafioThera.Controllers
 {
@@ -65,7 +66,6 @@ namespace DesafioThera.Controllers
         [ClaimsAuthorize(claimType: TypePermissionEnum.Profiles, claimValue: ValuePermissionEnum.Update)]
         public ActionResult Edit(int id)
         {
-            Response.Cache.SetCacheability(HttpCacheability.NoCache);
             if (id > 0)
             {
                 ProfileVM profileViewEdit = _profileAppService.Get(u => u.Id == id, null, "ProfilePermissions").FirstOrDefault();
@@ -85,7 +85,7 @@ namespace DesafioThera.Controllers
             }
         }
 
-        // POST: Profile/Edit/5
+        // POST: Profile/Edit
         [HttpPost]
         [ClaimsAuthorize(claimType: TypePermissionEnum.Profiles, claimValue: ValuePermissionEnum.Update)]
         public ActionResult Edit(ProfileVM profileViewEdit)
@@ -124,7 +124,7 @@ namespace DesafioThera.Controllers
             _errors = _profileAppService.Delete(profileId);
             if (_errors?.Count == 0)
             {
-                this.Flash(Toastr.SUCCESS, String.Format("Secretária(o) Desativada(o) com sucesso"));
+                this.Flash(Toastr.SUCCESS, String.Format("Perfil Desativado com sucesso"));
                 return RedirectToAction("Index");
 
             }

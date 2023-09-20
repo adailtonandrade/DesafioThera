@@ -8,7 +8,7 @@ namespace Domain.Entities
         public string FullName { get; set; }
         public string Email { get; set; }
         public string Cpf { get; set; }
-        public string ResumeUniqueName { get; set; }
+        public byte[] ResumeFileData { get; set; }
         public string ResumeFileName { get; set; }
         public string Active { get; set; }
         public DateTime CreatedAt { get; set; }

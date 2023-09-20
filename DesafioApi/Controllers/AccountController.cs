@@ -10,7 +10,6 @@ using System.Security.Claims;
 using CrossCutting.JWTConfig;
 using System.Web.Http;
 using System.Web;
-using DesafioApi.CustomAttribute;
 
 namespace DesafioApi.Controllers
 {
@@ -57,12 +56,7 @@ namespace DesafioApi.Controllers
                 _userManager = value;
             }
         }
-        //// GET: Account
-        //public IHttpActionResult Index()
-        //{
-        //    return View();
-        //}
-        //
+
         // POST: /Account/Login
         [System.Web.Mvc.HttpPost]
         [System.Web.Mvc.AllowAnonymous]
@@ -80,13 +74,6 @@ namespace DesafioApi.Controllers
             return Unauthorized();
         }
 
-        // GET api/account/5
-        [ClaimsAuthorization(TypePermissionEnum.Administrators, ValuePermissionEnum.Consult)]
-        public string Get(int id)
-        {
-            var meuUser = User;
-            return "value";
-        }
         private List<Claim> GetUserClaims(ApplicationUser user)
         {
             var permissions = _profileAppService.GetPermissions(user.ProfileId);

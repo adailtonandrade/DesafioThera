@@ -24,7 +24,8 @@ namespace DesafioThera
                       "~/Scripts/bootstrap.js"));
 
             bundles.Add(new ScriptBundle("~/toastr/js").Include(
-                        "~/Scripts/toastr.js"));
+                        "~/Scripts/toastr.js",
+                        "~/Scripts/toastrOptions.js"));
 
             bundles.Add(new ScriptBundle("~/toastr/css").Include(
             "~/Content/toastr.css"));

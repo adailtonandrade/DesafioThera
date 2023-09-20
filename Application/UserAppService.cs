@@ -59,7 +59,7 @@ namespace Application
                 if (_errors?.Count() == 0)
                 {
                     BeginTransaction();
-                    var userToBeChanged = _userService.GetById(obj.Id);
+                    var userToBeChanged = _userService.GetByIdNoTracking(obj.Id);
                     userToBeChanged.ProfileId = user.ProfileId;
                     userToBeChanged.Email = user.Email;
                     userToBeChanged.Cpf = user.Cpf;

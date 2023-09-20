@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 
 namespace Identity.ViewModels
 {
@@ -13,7 +14,7 @@ namespace Identity.ViewModels
         [DataType(DataType.Password)]
         [Display(Name = "Senha")]
         public string Password { get; set; }
-
+        [JsonIgnore]
         [Display(Name = "Lembrar-Me")]
         public bool RememberMe { get; set; }
     }

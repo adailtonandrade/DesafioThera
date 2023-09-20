@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using Domain.Validations;
 using System;
 using Domain.Enum;
+using Newtonsoft.Json;
 
 namespace Application.ViewModels
 {
@@ -37,11 +38,14 @@ namespace Application.ViewModels
         public DateTime? UpdatedAt { get; set; }
 
         [Display(Name = "Atualizado Por")]
+        [JsonIgnore]
         public int UpdatedBy { get; set; }
         [Display(Name = "Currículo")]
+        [JsonIgnore]
         public HttpPostedFileBase Resume { get; set; }
-        public string ResumeUniqueName { get; set; }
-        [Display(Name = "Curriculo Atual")]
+        [JsonIgnore]
+        public byte[] ResumeFileData { get; set; }
+        [Display(Name = "Currículo Atual")]
         public string ResumeFileName { get; set; }
         public string StatusName(string Active)
         {

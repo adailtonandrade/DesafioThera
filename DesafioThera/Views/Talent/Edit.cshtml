@@ -46,12 +46,11 @@
 
             @if (!string.IsNullOrEmpty(Model.ResumeFileName))
             {
-                <p>@Html.DisplayNameFor(model => model.ResumeFileName): <a href="@Url.Action("DownloadResume", "Talent", new { resumeUniqueName = Model.ResumeUniqueName, resumefileName = Model.ResumeFileName })">@Model.ResumeFileName</a></p>
+                <p>@Html.DisplayNameFor(model => model.ResumeFileName): <a href="@Url.Action("DownloadResume", "Talent", new { talentId = Model.Id })">@Model.ResumeFileName</a></p>
             }
         </div>
         <div class="form-group">
             @Html.HiddenFor(model => model.Active)
-            @Html.HiddenFor(model => model.ResumeUniqueName)
             @Html.HiddenFor(model => model.ResumeFileName)
             @Html.HiddenFor(model => model.CreatedAt)
             @Html.HiddenFor(model => model.UpdatedAt)
