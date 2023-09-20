@@ -22,7 +22,6 @@ namespace DesafioApi.Controllers
     public class TalentController : ApiController
     {
         List<string> errors = new List<string>();
-        //private string activeStatus = ((int)GenericStatusEnum.Active).ToString();
         private readonly ITalentAppService _talentAppService;
 
         public TalentController(ITalentAppService talentAppService)
@@ -40,15 +39,15 @@ namespace DesafioApi.Controllers
         }
 
         //// GET: api/talents/5
-        //[Route("{id:int}")]
-        //[ClaimsAuthorization(TypePermissionEnum.Talents, ValuePermissionEnum.Consult)]
-        //public IHttpActionResult Get(int id)
-        //{
-        //    var talent = _talentAppService.GetDetailsById(id);
-        //    if (talent != null)
-        //        return Ok(new ResponseViewModel<TalentDetailsVM>() { Content = talent });
-        //    return NotFound();
-        //}
+        [Route("{id:int}")]
+        [ClaimsAuthorization(TypePermissionEnum.Talents, ValuePermissionEnum.Consult)]
+        public IHttpActionResult Get(int id)
+        {
+            var talent = _talentAppService.GetDetailsById(id);
+            if (talent != null)
+                return Ok(new ResponseViewModel<TalentDetailsVM>() { Content = talent });
+            return NotFound();
+        }
 
         // POST: api/talents
         [Route("")]

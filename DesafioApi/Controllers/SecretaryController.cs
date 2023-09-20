@@ -53,7 +53,7 @@ namespace DesafioApi.Controllers
 
         // POST: api/secretaries
         [Route("")]
-        //[ClaimsAuthorization(TypePermissionEnum.Secretaries, ValuePermissionEnum.Create)]
+        [ClaimsAuthorization(TypePermissionEnum.Secretaries, ValuePermissionEnum.Create)]
         public async Task<IHttpActionResult> Post([FromBody] RegisterVM secretary)
         {
             if (!ModelState.IsValid)
@@ -121,7 +121,7 @@ namespace DesafioApi.Controllers
             }
         }
 
-        // PUT: api/Secretary/5
+        // PUT: api/secretaries/5
         [Route("{id:int}")]
         [ClaimsAuthorization(TypePermissionEnum.Secretaries, ValuePermissionEnum.Update)]
         public IHttpActionResult Put(int id, [FromBody] UserVM secretary)
@@ -164,7 +164,7 @@ namespace DesafioApi.Controllers
             });
         }
 
-        // DELETE: api/Secretary/5
+        // DELETE: api/secretaries/5
         [Route("{id:int}")]
         [ClaimsAuthorization(TypePermissionEnum.Secretaries, ValuePermissionEnum.Deactivate)]
         public IHttpActionResult Delete(int id)

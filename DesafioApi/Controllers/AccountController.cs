@@ -16,8 +16,6 @@ namespace DesafioApi.Controllers
 
     public class AccountController : ApiController
     {
-        List<string> errors = new List<string>();
-        private string activeStatus = ((int)GenericStatusEnum.Active).ToString();
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
         private readonly IProfileAppService _profileAppService;
