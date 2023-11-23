@@ -24,7 +24,7 @@ Tentei aplicar uma arquitetura próxima ao DDD, orientada a domínio, separada p
   **<add key="mailApi" value="INSIRA A CHAVE DO SENDGRID" />**
   Precisará também mudar no arquivo MailService, dentro da camada de CrossCutting/Identity/Configuration o valor do from para corresponder ao seu sender do SendGrid.
 
-## Documentação da Aplicação WEB MVC(Pasta DesafioThera)
+## Documentação da Aplicação WEB MVC (Pasta DesafioThera)
 **Tipo de Autenticação:** Cookie.
 
 - O botão de **Registrar** no menu inicial não ta com nenhuma proteção de autorização, justamente para poder testar o sistema.
@@ -32,7 +32,7 @@ Tentei aplicar uma arquitetura próxima ao DDD, orientada a domínio, separada p
 - O menu só vai mostrar abas relacionadas a entidade que o perfil logado pode pelo menos visualizar, os botões de Editar, Detalhes e Desativar só ficam disponíveis também de acordo com a permissão do perfil logado.
 - A senha de cadastro é gerada pelo sistema e enviada por e-mail via SendGrid, mas eu coloquei umas viewbag para retornar ela na view pós cadastro, assim mesmo se der problema no envio do e-mail, será possível testar o sistema
 
-## Documentação da API(Pasta DesafioApi)
+## Documentação da API (Pasta DesafioApi)
 
 **Tipo de Autenticação:** JWT Bearer.
 
