@@ -216,7 +216,7 @@ Tentei aplicar uma arquitetura próxima ao DDD, orientada a domínio, separada p
 | :---------- | :--------- | :------------------------------------------ |
 | `FullName`      | `string` | **Obrigatório**. Nome do talento |
 | `Email`      | `string` | **Obrigatório**. Email do talento |
-| `Cpf`      | `string` | **Obrigatório**. Cpf do talento) |
+| `Cpf`      | `string` | **Obrigatório**. Cpf do talento |
 | `Resume`      | `string` | **Obrigatório**. Curriculo do Talento(PDF,DOC,DOCX) |
 
 #### Editar talento
@@ -230,7 +230,7 @@ Tentei aplicar uma arquitetura próxima ao DDD, orientada a domínio, separada p
 | :---------- | :--------- | :------------------------------------------ |
 | `FullName`      | `string` | **Obrigatório**. Nome do talento |
 | `Email`      | `string` | **Obrigatório**. Email do talento |
-| `Cpf`      | `string` | **Obrigatório**. Cpf do talento) |
+| `Cpf`      | `string` | **Obrigatório**. Cpf do talento |
 | `Resume`      | `string` | **Obrigatório**. Curriculo do Talento(PDF,DOC,DOCX) |
 
 #### Desativar talento
